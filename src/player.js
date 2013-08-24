@@ -7,11 +7,33 @@ var Player = function(x, y) {
 	this._symbol = '@';
 	this._color = '#3f0';
 
+	this.generateName();
 	this._maxHP = 10;
 	this._hp = this._maxHP;
 	this._damage = '1d6';
 
 	this.draw();
+}
+
+Player.prototype.generateName = function() {
+	player = this;
+	player._name = null;
+
+	if (!this._nextName) {
+		$.get('lib/ba-simple-proxy.php?url=http://www.behindthename.com/api/random.php?key=al820141&number=1', function (xml) {
+			player._name = $($.parseXML(xml.contents)).find('name').first().text();
+			player.draw();
+		});
+	} else {
+		this._name = this._nextName;
+		this._nextName = null;
+	}
+
+	setTimeout(function () {
+		$.get('lib/ba-simple-proxy.php?url=http://www.behindthename.com/api/random.php?key=al820141&number=1', function (xml) {
+			player._nextName = $($.parseXML(xml.contents)).find('name').first().text();
+		});
+	}, 1500);
 }
 
 Player.prototype.getSpeed = function() { return 100; }
@@ -95,6 +117,7 @@ Player.prototype.endTurn = function() {
 Player.prototype.draw = function() {
 	Game.display.draw(this._x, this._y, this._symbol, this._color);
 
+	$('#name').text(this._name ? this._name : ' ');
 	$('#hp').text(this._hp + '/' + this._maxHP + ' HP');
 	$('#damage').text('Damage: ' + this._damage);
 }
@@ -103,6 +126,7 @@ Player.prototype.die = function () {
 	Game.map[this._x+","+this._y] = 'corpse';
 	Game.sounds.dead.play();
 
+	this.generateName();
 	this._x = this._startX;
 	this._y = this._startY;
 	this._hp = this._maxHP;

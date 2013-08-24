@@ -34,6 +34,11 @@ body {
 	color: yellow;
 }
 
+#sidebar #stats #name {
+	color: white;
+	font-size: 1.3em;
+}
+
 #sidebar #stats #hp {
 	color: red;
 }
