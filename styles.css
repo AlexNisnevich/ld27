@@ -1,11 +1,18 @@
 body {
 	text-align: center;
+	font-family: monospace;
+	background: #222;
+	color: white;
+}
+
+#container {
+	margin: 0 auto;
+	width: 800px;
 }
 
 #countdown {
 	position: relative;
 	top: 20px;
-	color: white;
 	left: 5px;
-	font-family: monospace;
+	text-align: left;
 }
