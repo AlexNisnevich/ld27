@@ -11,6 +11,7 @@ var Player = function(x, y) {
 	this._maxHP = 10;
 	this._hp = this._maxHP;
 	this._damage = '1d6';
+	this._viewRadius = 6;
 
 	this.draw();
 }
@@ -128,7 +129,7 @@ Player.prototype.endTurn = function() {
 }
 
 Player.prototype.draw = function() {
-	Game.display.draw(this._x, this._y, this._symbol, this._color);
+	Game.display.draw(this._x, this._y, this._symbol, this._color, '#333');
 
 	$('#name').text(this._name ? this._name : ' ');
 	$('#hp').text(this._hp + '/' + this._maxHP + ' HP');

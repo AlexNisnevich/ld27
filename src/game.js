@@ -4,6 +4,7 @@ var Game = {
 	map: {},
 	rooms: [],
 	exploredPoints: [],
+	visiblePoints: [],
 
 	scheduler: null,
 	engine: null,
@@ -181,8 +182,9 @@ var Game = {
 
 	_drawVisibleArea: function() {
 		var visitedPoints = [];
+		this.visiblePoints = [];
 
-		function exploreAdjacentPoints(x, y) {
+		function exploreAdjacentPoints(x, y, dist) {
 			var key = x+","+y;
 			visitedPoints.push(key);
 
@@ -190,24 +192,33 @@ var Game = {
 				Game.exploredPoints.push(key);
 			}
 
-			if (Game.map[key] == 'floor' || Game.player.at(x, y)) {
+			if (dist <= player._viewRadius) {
+				Game.visiblePoints.push(key);
+			}
+
+			if ((Game.map[key] && Game.map[key] != 'door') || Game.player.at(x, y)) {
 				var adjacentPoints = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
 
 				_.each(adjacentPoints, function (pt) {
 					var x = pt[0]; var y = pt[1];
 					var key = x+","+y;
-					if (Game.map[key] && !_.contains(visitedPoints, key)) {
-						exploreAdjacentPoints(x, y);
+					if (Game.map[key] && (!_.contains(visitedPoints, key) || dist < player._viewRadius)) {
+						exploreAdjacentPoints(x, y, dist + 1);
 					}
 				})
 			}
 		}
 
-		exploreAdjacentPoints(this.player.getX(), this.player.getY());
+		exploreAdjacentPoints(this.player.getX(), this.player.getY(), 0);
 
 		_.each(this.exploredPoints, function (key) {
 			var pt = _.map(key.split(','), function (x) {return parseInt(x); });
-			Game.display.draw(pt[0], pt[1], Game.objects[Game.map[key]].symbol, Game.objects[Game.map[key]].color);
+			if (_(Game.visiblePoints).contains(key)) {
+				var bgColor = '#333';
+			} else {
+				var bgColor = '#000';
+			}
+			Game.display.draw(pt[0], pt[1], Game.objects[Game.map[key]].symbol, Game.objects[Game.map[key]].color, bgColor);
 		});
 
 		_(this.monsters).each(function (monster) {

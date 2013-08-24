@@ -10,11 +10,15 @@ var Monster = Class.ext({
 	},
 
 	_isVisible: function () {
-		return _(Game.exploredPoints).contains(this._x + "," + this._y)
+		return _(Game.visiblePoints).contains(this._x + "," + this._y);
+	},
+
+	_isEncountered: function () {
+		return _(Game.exploredPoints).contains(this._x + "," + this._y);
 	},
 
 	act: function() {
-		if (this._isVisible()) {
+		if (this._isEncountered()) {
 			var x = Game.player.getX();
 			var y = Game.player.getY();
 			var passableCallback = function(x, y) {
@@ -44,7 +48,7 @@ var Monster = Class.ext({
 
 	draw: function() {
 		if (this._isVisible()) {
-			Game.display.draw(this._x, this._y, this._symbol, this._color);
+			Game.display.draw(this._x, this._y, this._symbol, this._color, '#333');
 		}
 	},
 
