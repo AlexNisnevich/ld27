@@ -56,6 +56,19 @@ Player.prototype.handleEvent = function(e) {
 		}
 	}
 
+	// stepping on an interesting tile?
+	switch (Game.map[newKey]) {
+		case 'door':
+			Game.map[newKey] = 'doorOpened';
+			Game.sounds.door.play();
+			break;
+		case 'stairs':
+			Game.nextLevel();
+			this.endTurn();
+			Game.sounds.stairs.play();
+			return;
+	}
+
 	Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
 
 	this._x = newX;

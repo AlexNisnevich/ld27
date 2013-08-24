@@ -15,7 +15,9 @@ var Game = {
 		theme: new Audio("sounds/10rogue.wav"),
 
 		hit: new Audio("sounds/hit.wav"),
-		dead: new Audio("sounds/dead.wav")
+		dead: new Audio("sounds/dead.wav"),
+		door: new Audio("sounds/door.wav"),
+		stairs: new Audio("sounds/stairs.wav")
 	},
 
 	init: function() {
@@ -110,25 +112,44 @@ var Game = {
 			Game.scheduler.add(aardvark, true);
 		})
 
+		this._createObject('stairs', freeCells);
+
 		this.player = this._createBeing(Player, freeCells);
 		this.scheduler.add(this.player, true);
 
 		this._drawVisibleArea();
 	},
 
-	_createBeing: function(what, freeCells) {
+	_createObject: function(type, freeCells) {
+		var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
+		var key = freeCells.splice(index, 1)[0];
+		this.map[key] = type;
+	},
+
+	_createBeing: function(type, freeCells) {
 		var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
 		var key = freeCells.splice(index, 1)[0];
 		var parts = key.split(",");
 		var x = parseInt(parts[0]);
 		var y = parseInt(parts[1]);
-		return new what(x, y);
+		return new type(x, y);
 	},
 
 	removeBeing: function(being) {
 		this.monsters = _(this.monsters).without(being);
 		this.scheduler.remove(being);
 		this._drawVisibleArea();
+	},
+
+	nextLevel: function() {
+		this.map = {};
+		this.rooms = [];
+		this.exploredPoints = [];
+		this.monsters = [];
+
+		this.display.clear();
+		this.scheduler.clear();
+		this._generateMap();
 	},
 
 	_drawVisibleArea: function() {

@@ -14,5 +14,9 @@ Game.objects = {
 	'corpse': {
 		'symbol': 'x',
 		'color': '#ccc'
+	},
+	'stairs': {
+		'symbol': '>',
+		'color': 'LightBlue'
 	}
 }

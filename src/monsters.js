@@ -24,7 +24,7 @@ var Aardvark = function(x, y) {
 			var x = Game.player.getX();
 			var y = Game.player.getY();
 			var passableCallback = function(x, y) {
-			    return Game.map[x+","+y];
+			    return Game.map[x+","+y] && (Game.map[x+","+y] != 'door');
 			}
 			var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
 
