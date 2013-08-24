@@ -1,8 +1,10 @@
 var Player = function(x, y) {
 	this._x = x;
 	this._y = y;
+	this._startX = x;
+	this._startY = y;
 	this._symbol = '@';
-	this._draw();
+	this.draw();
 }
 
 Player.prototype.getSpeed = function() { return 100; }
@@ -46,13 +48,24 @@ Player.prototype.handleEvent = function(e) {
 
 	this._x = newX;
 	this._y = newY;
-	this._draw();
+	this.draw();
 
 	Game._drawVisibleArea();
+
 	//window.removeEventListener("keydown", this);
 	//Game.engine.unlock();
 }
 
-Player.prototype._draw = function() {
+Player.prototype.draw = function() {
 	Game.display.draw(this._x, this._y, this._symbol, "#ff0");
+}
+
+Player.prototype.die = function () {
+	Game.map[this._x+","+this._y] = 'x';
+
+	this._x = this._startX;
+	this._y = this._startY;
+
+	this.draw();
+	Game._drawVisibleArea();
 }

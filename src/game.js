@@ -2,10 +2,9 @@ var Game = {
 	display: null,
 	map: {},
 	rooms: [],
+	exploredPoints: [],
 	engine: null,
 	player: null,
-	pedro: null,
-	ananas: null,
 
 	init: function() {
 		this.display = new ROT.Display({spacing:1.1});
@@ -19,6 +18,30 @@ var Game = {
 
 		this.engine = new ROT.Engine(scheduler);
 		this.engine.start();
+
+		this._startCountdown();
+	},
+
+	_startCountdown: function() {
+		this.countdownTimer = 11;
+		this._countdown();
+	},
+
+	_countdown: function() {
+		this.countdownTimer--;
+		$('#countdown').text(this.countdownTimer);
+		if (this.countdownTimer <= 0) {
+			this._timeExpired();
+		} else {
+			setTimeout(function () {
+				Game._countdown();
+			}, 1000);
+		}
+	},
+
+	_timeExpired: function () {
+		this.player.die();
+		this._startCountdown();
 	},
 
 	_generateMap: function() {
@@ -62,10 +85,13 @@ var Game = {
 	_drawVisibleArea: function() {
 		var visitedPoints = [];
 
-		function drawAdjacentTo(x, y) {
+		function exploreAdjacentPoints(x, y) {
 			var key = x+","+y;
 			visitedPoints.push(key);
-			Game.display.draw(x, y, Game.map[key]);
+
+			if (!_.contains(Game.exploredPoints, key)) {
+				Game.exploredPoints.push(key);
+			}
 
 			if (Game.map[key] == '.' || Game.player.at(x, y)) {
 				var adjacentPoints = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
@@ -74,14 +100,20 @@ var Game = {
 					var x = pt[0]; var y = pt[1];
 					var key = x+","+y;
 					if (Game.map[key] && !_.contains(visitedPoints, key)) {
-						drawAdjacentTo(x, y);
+						exploreAdjacentPoints(x, y);
 					}
 				})
 			}
 		}
 
-		drawAdjacentTo(this.player.getX(), this.player.getY());
-		this.player._draw();
+		exploreAdjacentPoints(this.player.getX(), this.player.getY());
+
+		_.each(this.exploredPoints, function (key) {
+			var pt = _.map(key.split(','), function (x) {return parseInt(x); });
+			Game.display.draw(pt[0], pt[1], Game.map[key]);
+		});
+
+		this.player.draw();
 	},
 
 	_drawWholeMap: function() {
@@ -93,3 +125,7 @@ var Game = {
 		}
 	}
 };
+
+$(document).ready(function () {
+	Game.init();
+})

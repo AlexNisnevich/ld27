@@ -1,0 +1,11 @@
+body {
+	text-align: center;
+}
+
+#countdown {
+	position: relative;
+	top: 20px;
+	color: white;
+	left: 5px;
+	font-family: monospace;
+}
