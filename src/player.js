@@ -76,10 +76,12 @@ Player.prototype.draw = function() {
 	Game.display.draw(this._x, this._y, this._symbol, this._color);
 
 	$('#hp').text(this._hp + '/' + this._maxHP + ' HP');
+	$('#damage').text('Damage: ' + this._damage);
 }
 
 Player.prototype.die = function () {
 	Game.map[this._x+","+this._y] = 'corpse';
+	Game.sounds.dead.play();
 
 	this._x = this._startX;
 	this._y = this._startY;
@@ -92,7 +94,8 @@ Player.prototype.die = function () {
 Player.prototype._attack = function (monster) {
 	var damage = Game.calculateDamage(this._damage);
 	monster._hp -= damage;
-	console.log('You deal ' + damage + ' damage to the ' + monster._name + '.');
+	Game.log('You deal ' + damage + ' damage to the ' + monster._name + '.');
+	Game.sounds.hit.play();
 	if (monster._hp <= 0) {
 		Game.removeBeing(monster);
 	}

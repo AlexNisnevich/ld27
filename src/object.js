@@ -7,6 +7,10 @@ Game.objects = {
 		'symbol': '+',
 		'color': 'yellow'
 	},
+	'doorOpened': {
+		'symbol': '-',
+		'color': 'yellow'
+	},
 	'corpse': {
 		'symbol': 'x',
 		'color': '#ccc'

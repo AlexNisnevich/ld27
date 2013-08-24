@@ -17,8 +17,9 @@ body {
 }
 
 #sidebar {
-	width: 299px;
 	float: left;
+	position: relative;
+	width: 299px;
 	height: 425px;
 	background-color: black;
 }
@@ -28,8 +29,19 @@ body {
 	margin-top: 10px;
 }
 
-#sidebar #hp {
+#sidebar #stats {
+	margin-top: 5px;
+	color: yellow;
+}
+
+#sidebar #stats #hp {
 	color: red;
+}
+
+#sidebar #log {
+	position: absolute;
+	bottom: 2px;
+	width: 100%;
 }
 
 #muteControl {

@@ -12,7 +12,10 @@ var Game = {
 	monsters: [],
 
 	sounds: {
-		theme: new Audio("sounds/10rogue.wav")
+		theme: new Audio("sounds/10rogue.wav"),
+
+		hit: new Audio("sounds/hit.wav"),
+		dead: new Audio("sounds/dead.wav")
 	},
 
 	init: function() {
@@ -45,6 +48,10 @@ var Game = {
 		}
 	},
 
+	log: function(msg) {
+		$('#log').text(msg);
+	},
+
 	_startCountdown: function() {
 		this.countdownTimer = 11;
 		this._countdown();
@@ -69,6 +76,7 @@ var Game = {
 	_timeExpired: function () {
 		this.player.die();
 		this._startCountdown();
+		Game.log('You have died of old age!');
 	},
 
 	_generateMap: function() {

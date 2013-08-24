@@ -57,9 +57,10 @@ var Aardvark = function(x, y) {
 	this._attack = function(player) {
 		var damage = Game.calculateDamage(this._damage);
 		player._hp -= damage;
-		console.log('The ' + this._name + ' deals ' + damage + ' damage to you.')
+		Game.log('The ' + this._name + ' deals ' + damage + ' damage to you.')
+		Game.sounds.hit.play();
 		if (player._hp <= 0) {
-			console.log('You have been slain by an ' + this._name + '.')
+			Game.log('You have been slain by an ' + this._name + '.')
 			player.die();
 		} else {
 			player.draw();
