@@ -56,6 +56,7 @@ var Monster = Class.ext({
 		if (player._hp <= 0) {
 			Game.log('You have been slain by the ' + this._name + '.')
 			player.die();
+			Game._startCountdown();
 		} else {
 			player.draw();
 		}

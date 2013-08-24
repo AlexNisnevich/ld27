@@ -63,6 +63,7 @@ var Game = {
 
 	_startCountdown: function() {
 		this.countdownTimer = 11;
+		clearTimeout(this.countdownTimeout);
 		this._countdown();
 
 		this.sounds.theme.volume = 0.5;
@@ -79,7 +80,7 @@ var Game = {
 		if (this.countdownTimer <= 0) {
 			this._timeExpired();
 		} else {
-			setTimeout(function () {
+			this.countdownTimeout = setTimeout(function () {
 				Game._countdown();
 			}, 1000);
 		}
