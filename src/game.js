@@ -11,6 +11,8 @@ var Game = {
 	player: null,
 	monsters: [],
 
+	paused: false,
+
 	sounds: {
 		theme: new Audio("sounds/10rogue.wav"),
 
@@ -51,6 +53,11 @@ var Game = {
 	},
 
 	log: function(msg) {
+		$('#shadowLog').text($('#log').text())
+			.stop()
+			.css('color', '#999')
+			.animate({color:"#000"}, 3000);
+
 		$('#log').text(msg);
 	},
 
@@ -65,7 +72,9 @@ var Game = {
 	},
 
 	_countdown: function() {
-		this.countdownTimer--;
+		if (!this.paused) {
+			this.countdownTimer--;
+		}
 		$('#countdown').text(this.countdownTimer);
 		if (this.countdownTimer <= 0) {
 			this._timeExpired();
@@ -80,6 +89,15 @@ var Game = {
 		this.player.die();
 		this._startCountdown();
 		Game.log('You have died of old age!');
+	},
+
+	pause: function() {
+		this.paused = !this.paused;
+		if (this.paused) {
+			this.sounds.theme.pause();
+		} else {
+			this.sounds.theme.play();
+		}
 	},
 
 	_generateMap: function() {

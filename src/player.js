@@ -27,6 +27,13 @@ Player.prototype.act = function() {
 Player.prototype.handleEvent = function(e) {
 	var code = e.keyCode;
 
+	// pausing or paused?
+	if (code == ROT.VK_P) {
+		Game.pause();
+	} else if (Game.paused) {
+		return;
+	}
+
 	var keyMap = {};
 	keyMap[38] = 0;
 	keyMap[33] = 1;

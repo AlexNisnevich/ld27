@@ -38,6 +38,12 @@ body {
 	color: red;
 }
 
+#sidebar #shadowLog {
+	position: absolute;
+	bottom: 20px;
+	width: 100%;
+}
+
 #sidebar #log {
 	position: absolute;
 	bottom: 2px;
@@ -50,4 +56,10 @@ body {
 
 #muteControl #muteButton {
 	cursor: pointer;
+}
+
+#controls {
+	clear: both;
+	position: relative;
+	top: 1em;
 }
