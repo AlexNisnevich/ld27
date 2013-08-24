@@ -1,25 +1,29 @@
 var Game = {
 	display: null,
+
 	map: {},
 	rooms: [],
 	exploredPoints: [],
+
+	scheduler: null,
 	engine: null,
+
 	player: null,
+	monsters: [],
+
 	sounds: {
 		theme: new Audio("sounds/10rogue.wav")
 	},
 
 	init: function() {
 		this.display = new ROT.Display({spacing:1.1});
-		document.body.appendChild(this.display.getContainer());
+		$('#canvasContainer').append(this.display.getContainer());
+
+		this.scheduler = new ROT.Scheduler.Simple();
 
 		this._generateMap();
 
-		var scheduler = new ROT.Scheduler.Simple();
-		scheduler.add(this.player, true);
-		scheduler.add(this.pedro, true);
-
-		this.engine = new ROT.Engine(scheduler);
+		this.engine = new ROT.Engine(this.scheduler);
 		this.engine.start();
 
 		this._startCountdown();
@@ -28,11 +32,11 @@ var Game = {
 	mute: function() {
 		if ($('#muteButton').hasClass('muted')) {
 			$('#muteButton').removeClass('muted');
-			$('#muteImg').attr('src', 'images/mute-off.gif');
+			$('#muteImg').attr('src', 'images/mute-on.png');
 			var muted = false;
 		} else {
 			$('#muteButton').addClass('muted');
-			$('#muteImg').attr('src', 'images/mute-on.gif');
+			$('#muteImg').attr('src', 'images/mute-off.png');
 			var muted = true;
 		}
 
@@ -75,7 +79,7 @@ var Game = {
 			if (value) { return; }
 
 			var key = x+","+y;
-			this.map[key] = "space";
+			this.map[key] = "floor";
 			freeCells.push(key);
 		}
 		digger.create(digCallback.bind(this));
@@ -83,6 +87,7 @@ var Game = {
 		var drawDoor = function(x, y) {
 			var key = x+","+y;
 			this.map[key] = "door";
+			freeCells = _(freeCells).without(key);
 		}
 
 		this.rooms = digger.getRooms();
@@ -91,7 +96,14 @@ var Game = {
 			room.getDoors(drawDoor.bind(this));
 		}
 
+		_(5).times(function () {
+			var aardvark = Game._createBeing(Aardvark, freeCells);
+			Game.monsters.push(aardvark);
+			Game.scheduler.add(aardvark, true);
+		})
+
 		this.player = this._createBeing(Player, freeCells);
+		this.scheduler.add(this.player, true);
 
 		this._drawVisibleArea();
 	},
@@ -105,6 +117,12 @@ var Game = {
 		return new what(x, y);
 	},
 
+	removeBeing: function(being) {
+		this.monsters = _(this.monsters).without(being);
+		this.scheduler.remove(being);
+		this._drawVisibleArea();
+	},
+
 	_drawVisibleArea: function() {
 		var visitedPoints = [];
 
@@ -116,7 +134,7 @@ var Game = {
 				Game.exploredPoints.push(key);
 			}
 
-			if (Game.map[key] == 'space' || Game.player.at(x, y)) {
+			if (Game.map[key] == 'floor' || Game.player.at(x, y)) {
 				var adjacentPoints = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
 
 				_.each(adjacentPoints, function (pt) {
@@ -133,19 +151,14 @@ var Game = {
 
 		_.each(this.exploredPoints, function (key) {
 			var pt = _.map(key.split(','), function (x) {return parseInt(x); });
-			Game.display.draw(pt[0], pt[1], Game.objects[Game.map[key]].symbol);
+			Game.display.draw(pt[0], pt[1], Game.objects[Game.map[key]].symbol, Game.objects[Game.map[key]].color);
 		});
 
-		this.player.draw();
-	},
+		_(this.monsters).each(function (monster) {
+			monster.draw();
+		})
 
-	_drawWholeMap: function() {
-		for (var key in this.map) {
-			var parts = key.split(",");
-			var x = parseInt(parts[0]);
-			var y = parseInt(parts[1]);
-			this.display.draw(x, y, this.objects[this.map[key]].symbol);
-		}
+		this.player.draw();
 	}
 };
 

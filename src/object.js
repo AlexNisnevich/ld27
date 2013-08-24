@@ -1,11 +1,14 @@
 Game.objects = {
-	'space': {
-		'symbol': '.'
+	'floor': {
+		'symbol': '.',
+		'color': 'white'
 	},
 	'door': {
-		'symbol': '#'
+		'symbol': '+',
+		'color': 'yellow'
 	},
 	'corpse': {
-		'symbol': 'x'
+		'symbol': 'x',
+		'color': '#ccc'
 	}
 }

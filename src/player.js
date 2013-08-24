@@ -3,7 +3,14 @@ var Player = function(x, y) {
 	this._y = y;
 	this._startX = x;
 	this._startY = y;
+
 	this._symbol = '@';
+	this._color = '#3f0';
+
+	this._maxHP = 10;
+	this._hp = this._maxHP;
+	this._damage = '1d6';
+
 	this.draw();
 }
 
@@ -19,10 +26,6 @@ Player.prototype.act = function() {
 
 Player.prototype.handleEvent = function(e) {
 	var code = e.keyCode;
-	if (code == 13 || code == 32) {
-		this._checkBox();
-		return;
-	}
 
 	var keyMap = {};
 	keyMap[38] = 0;
@@ -44,6 +47,15 @@ Player.prototype.handleEvent = function(e) {
 	var newKey = newX + "," + newY;
 	if (!(newKey in Game.map)) { return; }
 
+	// attacking a monster?
+	for (var i = 0; i < Game.monsters.length; i++) {
+		var monster = Game.monsters[i];
+		if (monster.at(newX, newY)) {
+			this._attack(monster);
+			return;
+		}
+	}
+
 	Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
 
 	this._x = newX;
@@ -52,12 +64,18 @@ Player.prototype.handleEvent = function(e) {
 
 	Game._drawVisibleArea();
 
-	//window.removeEventListener("keydown", this);
-	//Game.engine.unlock();
+	this.endTurn();
+}
+
+Player.prototype.endTurn = function() {
+	window.removeEventListener("keydown", this);
+	Game.engine.unlock();
 }
 
 Player.prototype.draw = function() {
-	Game.display.draw(this._x, this._y, this._symbol, "#ff0");
+	Game.display.draw(this._x, this._y, this._symbol, this._color);
+
+	$('#hp').text(this._hp + '/' + this._maxHP + ' HP');
 }
 
 Player.prototype.die = function () {
@@ -65,7 +83,18 @@ Player.prototype.die = function () {
 
 	this._x = this._startX;
 	this._y = this._startY;
+	this._hp = this._maxHP;
 
 	this.draw();
 	Game._drawVisibleArea();
+}
+
+Player.prototype._attack = function (monster) {
+	var damage = Game.calculateDamage(this._damage);
+	monster._hp -= damage;
+	console.log('You deal ' + damage + ' damage to the ' + monster._name + '.');
+	if (monster._hp <= 0) {
+		Game.removeBeing(monster);
+	}
+	this.endTurn();
 }

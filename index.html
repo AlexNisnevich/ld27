@@ -11,18 +11,24 @@
         <script src="src/game.js"></script>
         <script src="src/object.js"></script>
         <script src="src/player.js"></script>
+        <script src="src/monsters.js"></script>
+        <script src="src/utility.js"></script>
 
         <link rel="stylesheet" href="styles.css"></script>
     </head>
     <body>
         <h1>10 Second Roguelike</h1>
         <div id="container">
-        	<div id="countdown"></div>
         	<div id="muteControl">
 				<a id="muteButton">
-					<img id="muteImg" src="images/mute-off.gif">
+					<img id="muteImg" src="images/mute-on.png">
 				</a>
 			</div>
+        	<div id="canvasContainer"></div>
+        	<div id="sidebar">
+    			<div id="countdown"></div>
+    			<div id="hp"></div>
+        	</div>
         </div>
     </body>
 </html>
