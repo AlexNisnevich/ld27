@@ -61,7 +61,7 @@ Player.prototype.draw = function() {
 }
 
 Player.prototype.die = function () {
-	Game.map[this._x+","+this._y] = 'x';
+	Game.map[this._x+","+this._y] = 'corpse';
 
 	this._x = this._startX;
 	this._y = this._startY;

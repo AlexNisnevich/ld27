@@ -5,6 +5,9 @@ var Game = {
 	exploredPoints: [],
 	engine: null,
 	player: null,
+	sounds: {
+		theme: new Audio("sounds/10rogue.wav")
+	},
 
 	init: function() {
 		this.display = new ROT.Display({spacing:1.1});
@@ -22,9 +25,29 @@ var Game = {
 		this._startCountdown();
 	},
 
+	mute: function() {
+		if ($('#muteButton').hasClass('muted')) {
+			$('#muteButton').removeClass('muted');
+			$('#muteImg').attr('src', 'images/mute-off.gif');
+			var muted = false;
+		} else {
+			$('#muteButton').addClass('muted');
+			$('#muteImg').attr('src', 'images/mute-on.gif');
+			var muted = true;
+		}
+
+		for (sound in this.sounds) {
+			this.sounds[sound].muted = muted;
+		}
+	},
+
 	_startCountdown: function() {
 		this.countdownTimer = 11;
 		this._countdown();
+
+		this.sounds.theme.pause();
+		this.sounds.theme.load();
+		this.sounds.theme.play();
 	},
 
 	_countdown: function() {
@@ -52,14 +75,14 @@ var Game = {
 			if (value) { return; }
 
 			var key = x+","+y;
-			this.map[key] = ".";
+			this.map[key] = "space";
 			freeCells.push(key);
 		}
 		digger.create(digCallback.bind(this));
 
 		var drawDoor = function(x, y) {
 			var key = x+","+y;
-			this.map[key] = "#";
+			this.map[key] = "door";
 		}
 
 		this.rooms = digger.getRooms();
@@ -93,7 +116,7 @@ var Game = {
 				Game.exploredPoints.push(key);
 			}
 
-			if (Game.map[key] == '.' || Game.player.at(x, y)) {
+			if (Game.map[key] == 'space' || Game.player.at(x, y)) {
 				var adjacentPoints = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
 
 				_.each(adjacentPoints, function (pt) {
@@ -110,7 +133,7 @@ var Game = {
 
 		_.each(this.exploredPoints, function (key) {
 			var pt = _.map(key.split(','), function (x) {return parseInt(x); });
-			Game.display.draw(pt[0], pt[1], Game.map[key]);
+			Game.display.draw(pt[0], pt[1], Game.objects[Game.map[key]].symbol);
 		});
 
 		this.player.draw();
@@ -121,11 +144,15 @@ var Game = {
 			var parts = key.split(",");
 			var x = parseInt(parts[0]);
 			var y = parseInt(parts[1]);
-			this.display.draw(x, y, this.map[key]);
+			this.display.draw(x, y, this.objects[this.map[key]].symbol);
 		}
 	}
 };
 
 $(document).ready(function () {
 	Game.init();
+
+	$('#muteButton').click(function () {
+		Game.mute();
+	})
 })
