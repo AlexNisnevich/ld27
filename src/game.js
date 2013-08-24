@@ -58,6 +58,7 @@ var Game = {
 		this.countdownTimer = 11;
 		this._countdown();
 
+		this.sounds.theme.volume = 0.5;
 		this.sounds.theme.pause();
 		this.sounds.theme.load();
 		this.sounds.theme.play();
@@ -106,24 +107,21 @@ var Game = {
 			room.getDoors(drawDoor.bind(this));
 		}
 
-		_(5).times(function () {
-			var aardvark = Game._createBeing(Aardvark, freeCells);
-			Game.monsters.push(aardvark);
-			Game.scheduler.add(aardvark, true);
-		})
-
-		this._createObject('stairs', freeCells);
+		this._createMonsters(Aardvark, freeCells, 5, 10);
+		this._createMonsters(Bunny, freeCells, 5, 10);
+		this._createObjects('stairs', freeCells, 1, 1);
 
 		this.player = this._createBeing(Player, freeCells);
-		this.scheduler.add(this.player, true);
 
 		this._drawVisibleArea();
 	},
 
-	_createObject: function(type, freeCells) {
-		var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
-		var key = freeCells.splice(index, 1)[0];
-		this.map[key] = type;
+	_createObjects: function(type, freeCells, min, max) {
+		_(getRandomInt(min, max)).times(function () {
+			var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
+			var key = freeCells.splice(index, 1)[0];
+			Game.map[key] = type;
+		})
 	},
 
 	_createBeing: function(type, freeCells) {
@@ -132,7 +130,17 @@ var Game = {
 		var parts = key.split(",");
 		var x = parseInt(parts[0]);
 		var y = parseInt(parts[1]);
-		return new type(x, y);
+
+		var being = new type(x, y);
+		Game.scheduler.add(being, true);
+		return being;
+	},
+
+	_createMonsters: function(type, freeCells, min, max) {
+		_(getRandomInt(min, max)).times(function () {
+			var monster = Game._createBeing(type, freeCells);
+			Game.monsters.push(monster);
+		});
 	},
 
 	removeBeing: function(being) {

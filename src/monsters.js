@@ -1,25 +1,19 @@
-var Aardvark = function(x, y) {
-	this.init = function() {
+var Monster = Class.ext({
+	init: function(x, y) {
 		this._x = x;
 		this._y = y;
-
-		this._symbol = 'a';
-		this._color = 'red';
-
-		this._name = 'aardvark'
-		this._hp = 5;
-		this._damage = '1d4';
-
 		this.draw();
-	}
+	},
 
-	this.at = function (x, y) { return this._x == x && this._y == y; }
+	at: function (x, y) {
+		return this._x == x && this._y == y;
+	},
 
-	this._isVisible = function () {
+	_isVisible: function () {
 		return _(Game.exploredPoints).contains(this._x + "," + this._y)
-	}
+	},
 
-	this.act = function() {
+	act: function() {
 		if (this._isVisible()) {
 			var x = Game.player.getX();
 			var y = Game.player.getY();
@@ -46,26 +40,50 @@ var Aardvark = function(x, y) {
 				Game._drawVisibleArea();
 			}
 		}
-	}
+	},
 
-	this.draw = function() {
+	draw: function() {
 		if (this._isVisible()) {
 			Game.display.draw(this._x, this._y, this._symbol, this._color);
 		}
-	}
+	},
 
-	this._attack = function(player) {
-		var damage = Game.calculateDamage(this._damage);
+	_attack: function(player) {
+		var damage = Game.dieRoll(this._damage);
 		player._hp -= damage;
 		Game.log('The ' + this._name + ' deals ' + damage + ' damage to you.')
 		Game.sounds.hit.play();
 		if (player._hp <= 0) {
-			Game.log('You have been slain by an ' + this._name + '.')
+			Game.log('You have been slain by the ' + this._name + '.')
 			player.die();
 		} else {
 			player.draw();
 		}
 	}
+});
 
-	this.init();
-}
+var Aardvark = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'a';
+		this._color = 'red';
+
+		this._name = 'aardvark'
+		this._hp = 5;
+		this._damage = '1d4';
+	}
+});
+
+var Bunny = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'b';
+		this._color = 'red';
+
+		this._name = 'bunny'
+		this._hp = 3;
+		this._damage = '1d3';
+	}
+});

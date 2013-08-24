@@ -105,7 +105,7 @@ Player.prototype.die = function () {
 }
 
 Player.prototype._attack = function (monster) {
-	var damage = Game.calculateDamage(this._damage);
+	var damage = Game.dieRoll(this._damage);
 	monster._hp -= damage;
 	Game.log('You deal ' + damage + ' damage to the ' + monster._name + '.');
 	Game.sounds.hit.play();
