@@ -19,21 +19,19 @@ Player.prototype.init = function () {
 	this._x = this._startX;
 	this._y = this._startY;
 
-	Game.generateCharacter(this._lvl, function (stats) {
-		player._name = stats.name;
-		player._maxHP = stats.hp;
-		player._hp = player._maxHP;
-		player._damage = stats.damage;
-		player._viewRadius = stats.viewRadius;
-		player._speed = stats.speed;
+	var stats = Game.generateCharacter(this._lvl);
 
-		player._exp = 0;
-		player._expThreshold = Game.experienceForLevel(player._lvl + 1);
+	player._name = stats.name;
+	player._maxHP = stats.hp;
+	player._hp = player._maxHP;
+	player._damage = stats.damage;
+	player._viewRadius = 5;
+	player._speed = stats.speed;
 
-		player.draw();
+	player._exp = 0;
+	player._expThreshold = Game.experienceForLevel(player._lvl + 1);
 
-		Game._startCountdown();
-	});
+	player.draw();
 }
 
 Player.prototype.getSpeed = function() { return this._speed; }
@@ -127,7 +125,6 @@ Player.prototype.draw = function() {
 	$('#hp').text(this._hp + '/' + this._maxHP + ' HP');
 	$('#xp').text(this._exp + '/' + this._expThreshold + ' XP');
 	$('#damage').text('Damage: ' + this._damage);
-	$('#vision').text('Vision: ' + this._viewRadius);
 	$('#speed').text('Speed: ' + this._speed);
 }
 
