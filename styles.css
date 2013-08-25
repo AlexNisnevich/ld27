@@ -146,3 +146,55 @@ canvas.hidden {
 	position: relative;
 	overflow: hidden;
 }
+
+#memoriam {
+	position: absolute;
+	width: 800px;
+	display: none;
+	height: 425px;
+	overflow-y: scroll;
+}
+
+.memoriamCaption {
+	color: yellow;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	clear: both;
+}
+
+.memoriamCaption p {
+	margin-top: 10px;
+	margin-bottom: 0;
+}
+
+.memoriamCaption a {
+	color: yellow;
+}
+
+.memoriamCaption a:hover {
+	color: #333;
+	background: yellow;
+}
+
+#thanks {
+	height: 20px;
+}
+
+#thanks div {
+	float: left;
+	width: 150px;
+	color: white;
+}
+
+#heroes div {
+	float: left;
+	width: 250px;
+}
+
+#heroes .name {
+	margin-right: 10px;
+}
+
+#heroes .causeOfDeath {
+	color: red;
+}

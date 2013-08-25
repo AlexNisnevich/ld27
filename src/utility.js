@@ -61,6 +61,7 @@ Game.generateCharacter = function (lvl) {
 	var vision = Math.max(3, (Math.floor(_.random(attributes.wisdom, attributes.wisdom * 1.5))));
 
 	var stats = {
+		level: lvl,
 		attributes: attributes,
 		hp: hp,
 		damage: attackNum + 'd' + attackDice,

@@ -4,7 +4,6 @@ var Player = function(x, y) {
 
 	this._symbol = '@';
 	this._color = '#3f0';
-	this._lvl = 1;
 }
 
 Player.prototype.setCharacter = function (character) {
@@ -14,6 +13,7 @@ Player.prototype.setCharacter = function (character) {
 	this._y = this._startY;
 
 	player._name = character.name;
+	player._lvl = character.level;
 	player._maxHP = character.hp;
 	player._hp = player._maxHP;
 	player._damage = character.damage;
@@ -52,7 +52,7 @@ Player.prototype.handleEvent = function(e) {
 		} else {
 			return;
 		}
-	} else if (Game.paused) {
+	} else if (Game.paused || Game.ended) {
 		return;
 	}
 
@@ -103,7 +103,7 @@ Player.prototype.handleEvent = function(e) {
 			Game.sounds.hit.play();
 			if (player._hp <= 0) {
 				Game.log('You have been slain by the dragon.');
-				this.die();
+				this.die('slain by dragon');
 			} else {
 				this.draw();
 			}
@@ -145,10 +145,11 @@ Player.prototype.draw = function() {
 	$('.meter .xpBar').css({'width': Math.min(1, this._exp / this._expThreshold) * 100 + '%'});
 }
 
-Player.prototype.die = function () {
+Player.prototype.die = function (causeOfDeath) {
 	this.draw();
 	Game.map[this._x+","+this._y] = 'corpse';
 	Game.sounds.dead.play();
+	Game.fallenHeroes.push([this._name, causeOfDeath])
 
 	Game.chooseCharacter(this._lvl);
 }

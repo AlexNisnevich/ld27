@@ -70,7 +70,7 @@ var Monster = Class.ext({
 		Game.sounds.hit.play();
 		if (player._hp <= 0) {
 			Game.log('You have been slain by the ' + this._name + '.');
-			player.die();
+			player.die('slain by ' + this._name);
 		} else {
 			player.draw();
 		}
@@ -243,11 +243,14 @@ var Dragon = Monster.ext({
 	},
 	die: function() {
 		this._super();
+
 		for (key in Game.map) {
 			if (Game.map[key] == 'fire') {
 				Game.map[key] = 'floor';
 			}
 		}
 		Game._drawVisibleArea();
+
+		Game.end();
 	}
 });

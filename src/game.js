@@ -11,7 +11,9 @@ var Game = {
 	engine: null,
 
 	player: null,
+	startLevel: 1,
 	monsters: [],
+	fallenHeroes: [],
 
 	paused: false,
 	choosingCharacter: true,
@@ -39,7 +41,7 @@ var Game = {
 		this.engine = new ROT.Engine(this.scheduler);
 		this.engine.start();
 
-		Game.chooseCharacter(1);
+		Game.chooseCharacter(this.startLevel);
 
 		this.sounds.theme.volume = 0.4;
 		this.sounds.menu.volume = 0.3;
@@ -75,6 +77,25 @@ var Game = {
 				Game.sounds.menu.load();
 			})
 		});
+	},
+
+	end: function() {
+		this.ended = true;
+		this._stopCountdown();
+
+		$('#memoriam').show();
+		$('#chooseCharacter').hide();
+		$('canvas').addClass('hidden');
+		this.sounds.menu.play();
+
+		_(this.fallenHeroes).each(function (hero) {
+			var name = hero[0];
+			var causeOfDeath = hero[1];
+
+			var nameSpan = $('<span>').addClass('name').text(name);
+			var causeOfDeathSpan = $('<span>').addClass('causeOfDeath').text(causeOfDeath);
+			$('<div>').append(nameSpan).append(causeOfDeathSpan).appendTo('#heroes')
+		})
 	},
 
 	mute: function() {
@@ -133,7 +154,7 @@ var Game = {
 
 	_timeExpired: function () {
 		Game.log('You have died of old age!');
-		this.player.die();
+		this.player.die('died of old age');
 	},
 
 	pause: function() {
