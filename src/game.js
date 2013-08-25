@@ -100,6 +100,7 @@ var Game = {
 			.animate({color:"#000"}, 3000);
 
 		$('#log').text(msg);
+		console.log(msg);
 	},
 
 	_startCountdown: function() {
@@ -144,32 +145,68 @@ var Game = {
 		}
 	},
 
+	_mapName: function () {
+		if (this.levelNum <= 5) {
+			return 'Dungeon Floor ' + Game.levelNum;
+		} else {
+			return 'Dragon\'s Lair';
+		}
+	},
+
+	_mapType: function () {
+		if (this.levelNum <= 5) {
+			return 'dungeon';
+		} else {
+			return 'cellular';
+		}
+	},
+
 	_generateMap: function() {
-		var digger = new ROT.Map.Digger();
 		var freeCells = [];
 
-		var digCallback = function(x, y, value) {
+		var mapCallback = function(x, y, value) {
 			if (value) { return; }
 
 			var key = x+","+y;
 			this.map[key] = "floor";
 			freeCells.push(key);
 		}
-		digger.create(digCallback.bind(this));
 
-		var drawDoor = function(x, y) {
-			var key = x+","+y;
-			this.map[key] = "door";
-			freeCells = _(freeCells).without(key);
+		if (this._mapType() == 'dungeon') {
+			// dungeon map
+
+			var digger = new ROT.Map.Digger();
+
+			digger.create(mapCallback.bind(this));
+
+			var drawDoor = function(x, y) {
+				var key = x+","+y;
+				this.map[key] = "door";
+				freeCells = _(freeCells).without(key);
+			}
+
+			this.rooms = digger.getRooms();
+			for (var i=0; i<this.rooms.length; i++) {
+				var room = this.rooms[i];
+				room.getDoors(drawDoor.bind(this));
+			}
+
+			this._createObjects('stairs', freeCells, 1, 1);
+		} else {
+			// cellular map
+
+			var cellular = new ROT.Map.Cellular(80, 25, {
+			    born: [4, 5, 6, 7, 8],
+			    survive: [2, 3, 4, 5]
+			});
+
+			cellular.randomize(0.9);
+
+			/* generate fifty iterations, show the last one */
+			for (var i=7; i>=0; i--) {
+			    cellular.create(i ? null : mapCallback.bind(this));
+			}
 		}
-
-		this.rooms = digger.getRooms();
-		for (var i=0; i<this.rooms.length; i++) {
-			var room = this.rooms[i];
-			room.getDoors(drawDoor.bind(this));
-		}
-
-		this._createObjects('stairs', freeCells, 1, 1);
 
 		if (!this.player) {
 			this.player = this._createBeing(Player, freeCells);
@@ -245,31 +282,41 @@ var Game = {
 	_drawVisibleArea: function() {
 		this.display.clear();
 
+		// find explored points
+
 		var visitedPoints = [];
 		this.visiblePoints = [];
 
-		function exploreAdjacentPoints(x, y, dist) {
-			var key = x+","+y;
-			visitedPoints.push(key);
+		if (this._mapType() == 'dungeon') {
+			// Dungeon
+			function exploreAdjacentPoints(x, y, dist) {
+				var key = x+","+y;
+				visitedPoints.push(key);
 
-			if (!_.contains(Game.exploredPoints, key)) {
-				Game.exploredPoints.push(key);
+				if (!_.contains(Game.exploredPoints, key)) {
+					Game.exploredPoints.push(key);
+				}
+
+				if ((Game.map[key] && Game.map[key] != 'door') || Game.player.at(x, y)) {
+					var adjacentPoints = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
+
+					_.each(adjacentPoints, function (pt) {
+						var x = pt[0]; var y = pt[1];
+						var key = x+","+y;
+						if (Game.map[key] && !_.contains(visitedPoints, key)) {
+							exploreAdjacentPoints(x, y, dist + 1);
+						}
+					})
+				}
 			}
 
-			if ((Game.map[key] && Game.map[key] != 'door') || Game.player.at(x, y)) {
-				var adjacentPoints = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
-
-				_.each(adjacentPoints, function (pt) {
-					var x = pt[0]; var y = pt[1];
-					var key = x+","+y;
-					if (Game.map[key] && !_.contains(visitedPoints, key)) {
-						exploreAdjacentPoints(x, y, dist + 1);
-					}
-				})
-			}
+			exploreAdjacentPoints(this.player.getX(), this.player.getY(), 0);
+		} else {
+			// Cellular
+			this.exploredPoints = _(this.map).keys();
 		}
 
-		exploreAdjacentPoints(this.player.getX(), this.player.getY(), 0);
+		// compute field-of-view
 
 		/* input callback */
 		var lightPasses = function(x, y) {

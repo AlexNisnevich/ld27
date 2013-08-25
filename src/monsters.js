@@ -37,19 +37,21 @@ var Monster = Class.ext({
 			}
 			astar.compute(this._x, this._y, pathCallback);
 
-			path.shift();
-			if (path.length <= 1) {
-				this._attack(Game.player);
-			} else {
-				x = path[0][0];
-				y = path[0][1];
-				if (!_(Game.monsters).some(function (monster) {
-					return monster._x == x && monster._y == y;
-				})) {
-					this._x = x;
-					this._y = y;
-					this.draw();
-					Game._drawVisibleArea();
+			if (path.length > 0 && path.length < 15) {
+				path.shift();
+				if (path.length <= 1) {
+					this._attack(Game.player);
+				} else {
+					x = path[0][0];
+					y = path[0][1];
+					if (!_(Game.monsters).some(function (monster) {
+						return monster._x == x && monster._y == y;
+					})) {
+						this._x = x;
+						this._y = y;
+						this.draw();
+						Game._drawVisibleArea();
+					}
 				}
 			}
 		}

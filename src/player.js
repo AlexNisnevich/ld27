@@ -140,7 +140,7 @@ Player.prototype.draw = function() {
 	$('#sidebar .damage').text('Damage: ' + this._damage);
 	$('#sidebar .speed').text('Speed: ' + this._speed);
 	$('#sidebar .vision').text('Vision: ' + this._viewRadius);
-	$('#sidebar .location').text('Location: Dungeon Floor ' + Game.levelNum);
+	$('#sidebar .location').text('Location: ' + Game._mapName());
 	$('.meter').show();
 	$('.meter .xpBar').css({'width': Math.min(1, this._exp / this._expThreshold) * 100 + '%'});
 }
