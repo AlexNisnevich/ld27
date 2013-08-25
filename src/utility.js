@@ -45,7 +45,8 @@ Game.generateCharacter = function (lvl) {
 	var attributes = {
 		constitution: 3,
 		strength: 2,
-		dexterity: 2
+		dexterity: 2,
+		wisdom: 2
 	}
 
 	_(lvl * 3).times(function () {
@@ -57,12 +58,14 @@ Game.generateCharacter = function (lvl) {
 	var attackNum = Math.floor(attributes.strength * 2 / 10) + 1;
 	var attackDice = Math.floor(attributes.strength * 2 / attackNum);
 	var speed = Math.max(1, Math.min(2, (Math.floor(_.random(attributes.dexterity, attributes.dexterity * 1.5)) + 5) / 10)).toFixed(1);
+	var vision = Math.max(3, (Math.floor(_.random(attributes.wisdom, attributes.wisdom * 1.5))));
 
 	var stats = {
 		attributes: attributes,
 		hp: hp,
 		damage: attackNum + 'd' + attackDice,
-		speed: speed
+		speed: speed,
+		vision: vision
 	}
 
 	stats.name = Game.generateName();

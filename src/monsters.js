@@ -140,7 +140,7 @@ var Grue = Monster.ext({
 		this._super(x, y);
 
 		this._symbol = 'G';
-		this._color = 'red';
+		this._color = 'gray';
 
 		this._name = 'grue'
 		this._hp = 12;

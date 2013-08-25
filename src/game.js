@@ -60,6 +60,7 @@ var Game = {
 			$(pane).find('.hp').text(character.hp + ' HP');
 			$(pane).find('.damage').text('Damage: ' + character.damage);
 			$(pane).find('.speed').text('Speed: ' + character.speed);
+			$(pane).find('.vision').text('Vision: ' + character.vision);
 
 			$(pane).click(function () {
 				Game.player.setCharacter(character);
@@ -254,17 +255,13 @@ var Game = {
 				Game.exploredPoints.push(key);
 			}
 
-			if (dist <= player._viewRadius) {
-				Game.visiblePoints.push(key);
-			}
-
 			if ((Game.map[key] && Game.map[key] != 'door') || Game.player.at(x, y)) {
 				var adjacentPoints = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
 
 				_.each(adjacentPoints, function (pt) {
 					var x = pt[0]; var y = pt[1];
 					var key = x+","+y;
-					if (Game.map[key] && (!_.contains(visitedPoints, key) || dist < player._viewRadius)) {
+					if (Game.map[key] && !_.contains(visitedPoints, key)) {
 						exploreAdjacentPoints(x, y, dist + 1);
 					}
 				})
@@ -272,6 +269,25 @@ var Game = {
 		}
 
 		exploreAdjacentPoints(this.player.getX(), this.player.getY(), 0);
+
+		/* input callback */
+		var lightPasses = function(x, y) {
+		    var key = x+","+y;
+		    if (key in data) { return (data[key] == 0); }
+		    return false;
+		}
+
+		var fov = new ROT.FOV.PreciseShadowcasting(function (x, y) {
+			var key = x+","+y;
+			if (key in Game.map) { return (Game.map[key] != 'door'); }
+			return false;
+		});
+
+		/* output callback */
+		fov.compute(this.player.getX(), this.player.getY(), this.player._viewRadius, function(x, y, r, visibility) {
+			var key = x+","+y;
+			Game.visiblePoints.push(key);
+		});
 
 		_.each(this.exploredPoints, function (key) {
 			var pt = _.map(key.split(','), function (x) {return parseInt(x); });

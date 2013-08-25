@@ -17,7 +17,7 @@ Player.prototype.setCharacter = function (character) {
 	player._maxHP = character.hp;
 	player._hp = player._maxHP;
 	player._damage = character.damage;
-	player._viewRadius = 4;
+	player._viewRadius = character.vision;
 	player._speed = character.speed;
 
 	player._exp = 0;
@@ -42,13 +42,17 @@ Player.prototype.handleEvent = function(e) {
 	// pause / level selection
 	if (code == ROT.VK_P) {
 		Game.pause();
-	} else if (code == ROT.VK_1) {
-		$('#char1').click();
-	} else if (code == ROT.VK_2) {
-		$('#char2').click();
-	} else if (code == ROT.VK_3) {
-		$('#char3').click();
-	} else if (Game.paused || Game.choosingCharacter) {
+	} else if (Game.choosingCharacter) {
+		if (code == ROT.VK_1) {
+			$('#char1').click();
+		} else if (code == ROT.VK_2) {
+			$('#char2').click();
+		} else if (code == ROT.VK_3) {
+			$('#char3').click();
+		} else {
+			return;
+		}
+	} else if (Game.paused) {
 		return;
 	}
 
@@ -124,7 +128,10 @@ Player.prototype.draw = function() {
 	$('#sidebar .xp').text(this._exp + '/' + this._expThreshold + ' XP');
 	$('#sidebar .damage').text('Damage: ' + this._damage);
 	$('#sidebar .speed').text('Speed: ' + this._speed);
+	$('#sidebar .vision').text('Vision: ' + this._viewRadius);
 	$('#sidebar .location').text('Location: Dungeon Floor ' + Game.levelNum);
+	$('.meter').show();
+	$('.meter .xpBar').css({'width': this._exp / this._expThreshold * 100 + '%'});
 }
 
 Player.prototype.die = function () {
@@ -145,7 +152,7 @@ Player.prototype._attack = function (monster) {
 		this._exp += monster._cr;
 		if (this._exp >= this._expThreshold) {
 			this._lvl++;
-			this._exp = 0;
+			this._exp -= Game.experienceForLevel(this._lvl);
 			this._expThreshold = Game.experienceForLevel(this._lvl + 1);
 			Game.sounds.pickup.play();
 			Game.log('You have reached level ' + this._lvl + '!');
