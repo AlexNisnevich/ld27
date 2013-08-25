@@ -7,45 +7,33 @@ var Player = function(x, y) {
 	this._lvl = 1;
 
 	this.init();
-	this.draw();
 }
 
 Player.prototype.init = function () {
+	player = this;
+
+	Game.generateName(function (name) {
+		player._name = name;
+	});
+
 	this._x = this._startX;
 	this._y = this._startY;
 
-	this.generateName();
-	var stats = Game.generateCharacter(this._lvl);
+	Game.generateCharacter(this._lvl, function (stats) {
+		player._name = stats.name;
+		player._maxHP = stats.hp;
+		player._hp = player._maxHP;
+		player._damage = stats.damage;
+		player._viewRadius = stats.viewRadius;
+		player._speed = stats.speed;
 
-	this._maxHP = stats.hp;
-	this._hp = this._maxHP;
-	this._damage = stats.damage;
-	this._viewRadius = stats.viewRadius;
-	this._speed = stats.speed;
+		player._exp = 0;
+		player._expThreshold = Game.experienceForLevel(player._lvl + 1);
 
-	this._exp = 0;
-	this._expThreshold = Game.experienceForLevel(this._lvl + 1);
-}
+		player.draw();
 
-Player.prototype.generateName = function() {
-	player = this;
-	player._name = null;
-
-	if (!this._nextName) {
-		Game.getRandomName(function (name) {
-			player._name = name;
-			player.draw();
-		});
-	} else {
-		this._name = this._nextName;
-		this._nextName = null;
-	}
-
-	setTimeout(function () {
-		Game.getRandomName(function (name) {
-			player._nextName = name;
-		});
-	}, 1500);
+		Game._startCountdown();
+	});
 }
 
 Player.prototype.getSpeed = function() { return this._speed; }

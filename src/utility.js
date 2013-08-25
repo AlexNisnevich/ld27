@@ -37,12 +37,29 @@ Game.experienceForLevel = function (lvl) {
 	return Math.round(Math.pow(1.7, lvl - 2) * 10);
 }
 
-Game.getRandomName = function (callback) {
+Game.names = [];
+Game.generateName = function (callback) {
 	if (window.location.host != '') {
 		// remote
-		$.get('lib/ba-simple-proxy.php?url=http://www.behindthename.com/api/random.php?key=al820141&number=1', function (xml) {
-			callback($($.parseXML(xml.contents)).find('name').first().text());
-		});
+		if (this.names.length > 0) {
+			callback(this.names.pop());
+		} else {
+			$.get('lib/ba-simple-proxy.php?url=http://www.behindthename.com/api/random.php?key=al820141&number=1', function (xml) {
+				var names = _($($.parseXML(xml.contents)).find('name')).map(function (x) {return $(x).text()})
+				Game.names = _(Game.names).union(names);
+				callback(Game.names.pop());
+			});
+		}
+
+		// start polling for names asynchronously (we may need a lot of names)
+		if (!this.namePoll) {
+			this.namePoll = setInterval(function () {
+				$.get('lib/ba-simple-proxy.php?url=http://www.behindthename.com/api/random.php?key=al820141&number=1', function (xml) {
+					var names = _($($.parseXML(xml.contents)).find('name')).map(function (x) {return $(x).text()})
+					Game.names = _(Game.names).union(names);
+				});
+			}, 2000);
+		}
 	} else {
 		// local - fallback to array (tiny subset of faker.js library)
 		first_names = ["Aaliyah", "Aaron", "Abagail", "Abbey", "Abbie", "Abbigail", "Abby", "Abdiel", "Abdul", "Abdullah", "Abe", "Abel", "Abelardo", "Abigail", "Abigale", "Abigayle", "Abner", "Abraham", "Ada", "Adah", "Adalberto", "Adaline", "Adam", "Adan", "Addie", "Addison", "Adela", "Adelbert", "Adele", "Adelia", "Adeline", "Adell", "Adella", "Adelle", "Aditya", "Adolf", "Adolfo", "Adolph", "Adolphus", "Adonis", "Adrain", "Adrian", "Adriana", "Adrianna", "Adriel", "Adrien", "Adrienne", "Afton", "Aglae", "Agnes", "Agustin", "Agustina", "Ahmad", "Ahmed", "Aida", "Aidan", "Aiden", "Aileen", "Aimee", "Aisha", "Aiyana", "Akeem", "Al", "Alaina", "Alan", "Alana", "Alanis", "Alanna", "Alayna", "Alba", "Albert", "Alberta", "Albertha", "Alberto", "Albin", "Albina", "Alda", "Alden", "Alec", "Aleen", "Alejandra", "Alejandrin", "Alek", "Alena", "Alene", "Alessandra", "Alessandro", "Alessia", "Aletha", "Alex", "Alexa", "Alexander", "Alexandra", "Alexandre", "Alexandrea", "Alexandria", "Alexandrine", "Alexandro", "Alexane", "Alexanne", "Alexie", "Alexis", "Alexys", "Alexzander", "Alf", "Alfonso", "Alfonzo", "Alford", "Alfred", "Alfreda", "Alfredo", "Ali", "Alia", "Alice", "Alicia", "Alisa", "Alisha", "Alison", "Alivia", "Aliya", "Aliyah", "Aliza", "Alize", "Allan", "Allen", "Allene", "Allie", "Allison", "Ally", "Alphonso", "Alta", "Althea", "Alva", "Alvah", "Alvena", "Alvera", "Alverta", "Alvina", "Alvis", "Alyce", "Alycia", "Alysa", "Alysha", "Alyson", "Alysson", "Amalia", "Amanda", "Amani", "Amara", "Amari", "Amaya", "Amber", "Ambrose", "Amelia", "Amelie", "Amely", "America", "Americo", "Amie", "Amina", "Amir", "Amira", "Amiya", "Amos", "Amparo", "Amy", "Amya", "Ana", "Anabel", "Anabelle", "Anahi", "Anais", "Anastacio", "Anastasia", "Anderson", "Andre", "Andreane", "Andreanne", "Andres", "Andrew", "Andy", "Angel", "Angela", "Angelica", "Angelina", "Angeline", "Angelita", "Angelo", "Angie", "Angus", "Anibal", "Anika", "Anissa", "Anita", "Aniya", "Aniyah", "Anjali", "Anna", "Annabel", "Annabell", "Annabelle", "Annalise", "Annamae", "Annamarie", "Anne", "Annetta", "Annette", "Annie", "Ansel", "Ansley", "Anthony", "Antoinette", "Antone", "Antonetta", "Antonette", "Antonia", "Antonietta", "Antonina", "Antonio", "Antwan", "Antwon", "Anya", "April", "Ara", "Araceli", "Aracely", "Arch", "Archibald", "Ardella", "Arden", "Ardith", "Arely", "Ari", "Ariane", "Arianna", "Aric", "Ariel", "Arielle", "Arjun", "Arlene", "Arlie", "Arlo", "Armand", "Armando", "Armani", "Arnaldo", "Arne", "Arno", "Arnold", "Arnoldo", "Arnulfo", "Aron", "Art", "Arthur", "Arturo", "Arvel", "Arvid", "Arvilla", "Aryanna", "Asa", "Asha", "Ashlee", "Ashleigh", "Ashley", "Ashly", "Ashlynn", "Ashton", "Ashtyn", "Asia", "Assunta", "Astrid", "Athena", "Aubree", "Aubrey", "Audie", "Audra", "Audreanne", "Audrey", "August", "Augusta", "Augustine", "Augustus", "Aurelia", "Aurelie", "Aurelio", "Aurore", "Austen", "Austin", "Austyn", "Autumn", "Ava", "Avery", "Avis", "Axel", "Ayana", "Ayden", "Ayla", "Aylin"];
@@ -50,7 +67,7 @@ Game.getRandomName = function (callback) {
 	}
 }
 
-Game.generateCharacter = function (lvl) {
+Game.generateCharacter = function (lvl, callback) {
 	var attributes = {
 		constitution: 4,
 		strength: 2,
@@ -70,5 +87,8 @@ Game.generateCharacter = function (lvl) {
 		speed: Math.max(1, Math.min(2, (_.random(attributes.dexterity, attributes.dexterity * 2) + 5) / 10)).toFixed(1)
 	}
 
-	return stats;
+	this.generateName(function (name) {
+		stats.name = name;
+		callback(stats);
+	});
 }

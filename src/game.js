@@ -34,8 +34,6 @@ var Game = {
 
 		this.engine = new ROT.Engine(this.scheduler);
 		this.engine.start();
-
-		this._startCountdown();
 	},
 
 	mute: function() {
