@@ -68,10 +68,6 @@ canvas.hidden {
 	font-size: 1.3em;
 }
 
-.stats .level {
-	margin-bottom: 5px;
-}
-
 .stats .hp {
 	color: red;
 }
@@ -123,7 +119,7 @@ canvas.hidden {
 	display: none;
 	height: 10px;
 	position: relative;
-	padding: 6px 10px 0;
+	padding: 3px 10px;
 }
 
 .meter > span {

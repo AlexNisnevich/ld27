@@ -96,6 +96,17 @@ Player.prototype.handleEvent = function(e) {
 			this.endTurn();
 			Game.sounds.stairs.play();
 			return;
+		case 'fire':
+			var damage = Game.dieRoll('1d6');
+			this._hp -= damage;
+			Game.log('The flame deals ' + damage + ' damage to you.')
+			Game.sounds.hit.play();
+			if (player._hp <= 0) {
+				Game.log('You have been slain by the dragon.');
+				this.die();
+			} else {
+				this.draw();
+			}
 	}
 
 	// sometimes recover health
@@ -131,7 +142,7 @@ Player.prototype.draw = function() {
 	$('#sidebar .vision').text('Vision: ' + this._viewRadius);
 	$('#sidebar .location').text('Location: Dungeon Floor ' + Game.levelNum);
 	$('.meter').show();
-	$('.meter .xpBar').css({'width': this._exp / this._expThreshold * 100 + '%'});
+	$('.meter .xpBar').css({'width': Math.min(1, this._exp / this._expThreshold) * 100 + '%'});
 }
 
 Player.prototype.die = function () {
@@ -150,7 +161,7 @@ Player.prototype._attack = function (monster) {
 	if (monster._hp <= 0) {
 		Game.log('You have slain the ' + monster._name + '.');
 		this._exp += monster._cr;
-		if (this._exp >= this._expThreshold) {
+		while (this._exp >= this._expThreshold) {
 			this._lvl++;
 			this._exp -= Game.experienceForLevel(this._lvl);
 			this._expThreshold = Game.experienceForLevel(this._lvl + 1);

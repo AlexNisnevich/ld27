@@ -61,13 +61,13 @@ var Monster = Class.ext({
 		}
 	},
 
-	_attack: function(player) {
-		var damage = Game.dieRoll(this._damage);
+	_attack: function(player, damage, attackName) {
+		var damage = Game.dieRoll(damage ? damage : this._damage);
 		player._hp -= damage;
-		Game.log('The ' + this._name + ' deals ' + damage + ' damage to you.')
+		Game.log('The ' + (attackName ? attackName : this._name) + ' deals ' + damage + ' damage to you.')
 		Game.sounds.hit.play();
 		if (player._hp <= 0) {
-			Game.log('You have been slain by the ' + this._name + '.')
+			Game.log('You have been slain by the ' + this._name + '.');
 			player.die();
 		} else {
 			player.draw();
@@ -86,7 +86,7 @@ var Aardvark = Monster.ext({
 		this._symbol = 'a';
 		this._color = 'red';
 
-		this._name = 'aardvark'
+		this._name = 'aardvark';
 		this._hp = 7;
 		this._damage = '1d6';
 		this._cr = 7;
@@ -100,7 +100,7 @@ var Bunny = Monster.ext({
 		this._symbol = 'b';
 		this._color = 'red';
 
-		this._name = 'bunny'
+		this._name = 'bunny';
 		this._hp = 5;
 		this._damage = '1d4';
 		this._cr = 5;
@@ -114,7 +114,7 @@ var Chicken = Monster.ext({
 		this._symbol = 'c';
 		this._color = 'red';
 
-		this._name = 'chicken'
+		this._name = 'chicken';
 		this._hp = 3;
 		this._damage = '1d3';
 		this._cr = 3;
@@ -128,7 +128,7 @@ var Goblin = Monster.ext({
 		this._symbol = 'G';
 		this._color = 'red';
 
-		this._name = 'goblin'
+		this._name = 'goblin';
 		this._hp = 10;
 		this._damage = '2d4';
 		this._cr = 15;
@@ -142,7 +142,7 @@ var Grue = Monster.ext({
 		this._symbol = 'G';
 		this._color = 'gray';
 
-		this._name = 'grue'
+		this._name = 'grue';
 		this._hp = 12;
 		this._damage = '2d4';
 		this._cr = 20;
@@ -168,7 +168,7 @@ var Hobgoblin = Monster.ext({
 		this._symbol = 'H';
 		this._color = 'red';
 
-		this._name = 'hobgoblin'
+		this._name = 'hobgoblin';
 		this._hp = 12;
 		this._damage = '2d6';
 		this._cr = 20;
@@ -182,10 +182,70 @@ var Tree = Monster.ext({
 		this._symbol = 'T';
 		this._color = 'red';
 
-		this._name = 'tree'
+		this._name = 'tree';
 		this._hp = 50;
 		this._damage = '2d4';
 		this._cr = 40;
 	},
 	getSpeed: function() { return 1/3; }
+});
+
+var Dragon = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'D';
+		this._color = 'red';
+
+		this._name = 'dragon';
+		this._hp = 50;
+		this._mp = 10;
+		this._damage = '2d6';
+		this._cr = 200;
+	},
+	act: function() {
+		var dragon = this;
+		if (this._isVisible() && this._mp > 5 && (this._x == Game.player.getX() || this._y == Game.player.getY())) {
+			Game.log('The dragon breathes fire.');
+			Game.sounds.dragon.play();
+
+			if (this._x == Game.player.getX() && this._y > Game.player.getY()) {
+				var points = [this._x+","+(this._y-1), this._x+","+(this._y-2), this._x+","+(this._y-3)];
+			} else if (this._x == Game.player.getX() && this._y < Game.player.getY()) {
+				var points = [this._x+","+(this._y+1), this._x+","+(this._y+2), this._x+","+(this._y+3)];
+			} else if (this._y == Game.player.getY() && this._x > Game.player.getX()) {
+				var points = [(this._x-1)+","+this._y, (this._x-2)+","+this._y, (this._x-3)+","+this._y];
+			} else if (this._y == Game.player.getY() && this._x < Game.player.getX()) {
+				var points = [(this._x+1)+","+this._y, (this._x+2)+","+this._y, (this._x+3)+","+this._y];
+			}
+
+			_(points).each(function (key) {
+				var pt = _.map(key.split(','), function (x) {return parseInt(x); });
+				if (key in Game.map && _(['floor', 'doorOpened']).contains(Game.map[key])) {
+					Game.map[key] = 'fire';
+				}
+				if (Game.player.at(pt[0], pt[1])) {
+					dragon._attack(player, '1d6', 'flame');
+				}
+			});
+			Game._drawVisibleArea();
+
+			this._mp -= 5;
+		} else {
+			this._super();
+		}
+
+		if (this._mp < 10) {
+			this._mp++;
+		}
+	},
+	die: function() {
+		this._super();
+		for (key in Game.map) {
+			if (Game.map[key] == 'fire') {
+				Game.map[key] = 'floor';
+			}
+		}
+		Game._drawVisibleArea();
+	}
 });

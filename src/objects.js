@@ -18,5 +18,9 @@ Game.objects = {
 	'stairs': {
 		'symbol': '>',
 		'color': 'LightBlue'
+	},
+	'fire': {
+		'symbol': '*',
+		'color': 'red'
 	}
 }
