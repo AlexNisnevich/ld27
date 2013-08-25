@@ -72,6 +72,7 @@ var Game = {
 
 				Game.choosingCharacter = false;
 				$('#chooseCharacter').hide();
+				$('#description').hide();
 				$('canvas').removeClass('hidden');
 				Game.sounds.menu.pause();
 				Game.sounds.menu.load();

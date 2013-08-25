@@ -198,3 +198,8 @@ canvas.hidden {
 #heroes .causeOfDeath {
 	color: red;
 }
+
+#description {
+	padding: 10px;
+	text-align: left;
+}
