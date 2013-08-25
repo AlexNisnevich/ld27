@@ -49,6 +49,8 @@ var Game = {
 	},
 
 	chooseCharacter: function(lvl) {
+		if (this.ended) { return; }
+
 		this.choosingCharacter = true;
 		this._stopCountdown();
 
@@ -168,7 +170,7 @@ var Game = {
 	},
 
 	_mapName: function () {
-		if (this.levelNum <= 5) {
+		if (this.levelNum <= 6) {
 			return 'Dungeon Floor ' + Game.levelNum;
 		} else {
 			return 'Dragon\'s Lair';
@@ -176,7 +178,7 @@ var Game = {
 	},
 
 	_mapType: function () {
-		if (this.levelNum <= 5) {
+		if (this.levelNum <= 6) {
 			return 'dungeon';
 		} else {
 			return 'cellular';
@@ -248,11 +250,21 @@ var Game = {
 	},
 
 	_createBeing: function(type, freeCells) {
-		var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
-		var key = freeCells.splice(index, 1)[0];
-		var parts = key.split(",");
-		var x = parseInt(parts[0]);
-		var y = parseInt(parts[1]);
+		var validLocation = false;
+		while (!validLocation) {
+			var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
+			var key = freeCells.splice(index, 1)[0];
+			var parts = key.split(",");
+			var x = parseInt(parts[0]);
+			var y = parseInt(parts[1]);
+
+			// avoid placing things on edges of cellular map
+			if (this._mapType() == 'cellular' && (!this.map[x+","+(y+1)] || !this.map[x+","+(y-1)] || !this.map[(x+1)+","+y] ||!this.map[(x-1)+","+y])) {
+				validLocation = false;
+			} else {
+				validLocation = true;
+			}
+		}
 
 		var being = new type(x, y);
 		Game.scheduler.add(being, true);
@@ -288,11 +300,14 @@ var Game = {
 	},
 
 	nextLevel: function() {
+		_(this.monsters).each(function (monster) {
+			monster.die();
+		});
+
 		this.levelNum++;
 		this.map = {};
 		this.rooms = [];
 		this.exploredPoints = [];
-		this.monsters = [];
 
 		this.display.clear();
 		this.scheduler.clear();

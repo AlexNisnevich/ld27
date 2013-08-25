@@ -254,3 +254,18 @@ var Dragon = Monster.ext({
 		Game.end();
 	}
 });
+
+var DragonHatchling = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'd';
+		this._color = 'red';
+
+		this._name = 'dragon hatchling';
+		this._hp = 10;
+		this._damage = '2d4';
+		this._cr = 20;
+	},
+	getSpeed: function() { return 1.5; }
+});
