@@ -5,28 +5,20 @@ var Player = function(x, y) {
 	this._symbol = '@';
 	this._color = '#3f0';
 	this._lvl = 1;
-
-	this.init();
 }
 
-Player.prototype.init = function () {
+Player.prototype.setCharacter = function (character) {
 	player = this;
-
-	Game.generateName(function (name) {
-		player._name = name;
-	});
 
 	this._x = this._startX;
 	this._y = this._startY;
 
-	var stats = Game.generateCharacter(this._lvl);
-
-	player._name = stats.name;
-	player._maxHP = stats.hp;
+	player._name = character.name;
+	player._maxHP = character.hp;
 	player._hp = player._maxHP;
-	player._damage = stats.damage;
-	player._viewRadius = 5;
-	player._speed = stats.speed;
+	player._damage = character.damage;
+	player._viewRadius = 4;
+	player._speed = character.speed;
 
 	player._exp = 0;
 	player._expThreshold = Game.experienceForLevel(player._lvl + 1);
@@ -47,10 +39,16 @@ Player.prototype.act = function() {
 Player.prototype.handleEvent = function(e) {
 	var code = e.keyCode;
 
-	// pausing or paused?
+	// pause / level selection
 	if (code == ROT.VK_P) {
 		Game.pause();
-	} else if (Game.paused) {
+	} else if (code == ROT.VK_1) {
+		$('#char1').click();
+	} else if (code == ROT.VK_2) {
+		$('#char2').click();
+	} else if (code == ROT.VK_3) {
+		$('#char3').click();
+	} else if (Game.paused || Game.choosingCharacter) {
 		return;
 	}
 
@@ -120,21 +118,19 @@ Player.prototype.endTurn = function() {
 Player.prototype.draw = function() {
 	Game.display.draw(this._x, this._y, this._symbol, this._color, Game.calculateLighting(this._x, this._y));
 
-	$('#name').text(this._name ? this._name : ' ');
-	$('#level').text('Level ' + this._lvl);
-	$('#hp').text(this._hp + '/' + this._maxHP + ' HP');
-	$('#xp').text(this._exp + '/' + this._expThreshold + ' XP');
-	$('#damage').text('Damage: ' + this._damage);
-	$('#speed').text('Speed: ' + this._speed);
+	$('#sidebar .name').text(this._name ? this._name : ' ');
+	$('#sidebar .level').text('Level ' + this._lvl);
+	$('#sidebar .hp').text(this._hp + '/' + this._maxHP + ' HP');
+	$('#sidebar .xp').text(this._exp + '/' + this._expThreshold + ' XP');
+	$('#sidebar .damage').text('Damage: ' + this._damage);
+	$('#sidebar .speed').text('Speed: ' + this._speed);
 }
 
 Player.prototype.die = function () {
 	Game.map[this._x+","+this._y] = 'corpse';
 	Game.sounds.dead.play();
 
-	this.init();
-	this.draw();
-	Game._drawVisibleArea();
+	Game.chooseCharacter(this._lvl);
 }
 
 Player.prototype._attack = function (monster) {

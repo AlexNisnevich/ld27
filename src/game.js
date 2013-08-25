@@ -13,6 +13,7 @@ var Game = {
 	monsters: [],
 
 	paused: false,
+	choosingCharacter: true,
 
 	sounds: {
 		theme: new Audio("sounds/10rogue.wav"),
@@ -35,7 +36,34 @@ var Game = {
 		this.engine = new ROT.Engine(this.scheduler);
 		this.engine.start();
 
-		Game._startCountdown();
+		Game.chooseCharacter(1);
+	},
+
+	chooseCharacter: function(lvl) {
+		this.choosingCharacter = true;
+		this._stopCountdown();
+
+		$('#chooseCharacter').show();
+		$('canvas').addClass('hidden');
+
+		$('#chooseCharacter .stats').each(function (i, pane) {
+			var character = Game.generateCharacter(lvl);
+			$(pane).find('.name').text(character.name);
+			$(pane).find('.level').text('Level ' + lvl);
+			$(pane).find('.hp').text(character.hp + ' HP');
+			$(pane).find('.damage').text('Damage: ' + character.damage);
+			$(pane).find('.speed').text('Speed: ' + character.speed);
+
+			$(pane).click(function () {
+				Game.player.setCharacter(character);
+				Game._drawVisibleArea();
+				Game._startCountdown();
+
+				Game.choosingCharacter = false;
+				$('#chooseCharacter').hide();
+				$('canvas').removeClass('hidden');
+			})
+		});
 	},
 
 	mute: function() {
@@ -64,14 +92,18 @@ var Game = {
 	},
 
 	_startCountdown: function() {
+		this._stopCountdown();
+		this._countdown();
+		this.sounds.theme.play();
+	},
+
+	_stopCountdown: function() {
 		this.countdownTimer = 11;
 		clearTimeout(this.countdownTimeout);
-		this._countdown();
 
 		this.sounds.theme.volume = 0.3;
 		this.sounds.theme.pause();
 		this.sounds.theme.load();
-		this.sounds.theme.play();
 	},
 
 	_countdown: function() {
@@ -89,9 +121,8 @@ var Game = {
 	},
 
 	_timeExpired: function () {
-		this.player.die();
-		this._startCountdown();
 		Game.log('You have died of old age!');
+		this.player.die();
 	},
 
 	pause: function() {
@@ -130,6 +161,7 @@ var Game = {
 
 		this._createMonsters(Aardvark, freeCells, 5, 10);
 		this._createMonsters(Bunny, freeCells, 5, 10);
+		this._createMonsters(Chicken, freeCells, 5, 10);
 		this._createObjects('stairs', freeCells, 1, 1);
 
 		if (!this.player) {
@@ -137,8 +169,6 @@ var Game = {
 		} else {
 			this._placePlayer(freeCells);
 		}
-
-		this._drawVisibleArea();
 	},
 
 	_createObjects: function(type, freeCells, min, max) {
@@ -197,6 +227,7 @@ var Game = {
 		this.scheduler.clear();
 		Game.scheduler.add(this.player, true);
 		this._generateMap();
+		this._drawVisibleArea();
 	},
 
 	_drawVisibleArea: function() {

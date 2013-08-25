@@ -54,6 +54,7 @@ Game.generateCharacter = function (lvl, callback) {
 	});
 
 	var stats = {
+		attributes: attributes,
 		hp: Game.dieRoll(attributes.constitution + 'd4'),
 		damage: '1d' + (attributes.strength * 2),
 		speed: Math.max(1, Math.min(2, (_.random(attributes.dexterity, attributes.dexterity * 2) + 5) / 10)).toFixed(1)
