@@ -251,6 +251,7 @@ var Dragon = Monster.ext({
 		}
 		Game._drawVisibleArea();
 
+		Game.sounds.explosion.play();
 		Game.end();
 	}
 });

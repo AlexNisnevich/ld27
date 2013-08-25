@@ -56,6 +56,20 @@ Player.prototype.handleEvent = function(e) {
 		return;
 	}
 
+	/*
+		7 8 9
+		 \|/
+		4-5-6
+		 /|\
+		1 2 3
+
+		y k u
+		 \|/
+		h-.-l
+		 /|\
+		b j n
+	*/
+
 	var keyMap = {};
 	keyMap[38] = 0;
 	keyMap[33] = 1;
@@ -65,6 +79,14 @@ Player.prototype.handleEvent = function(e) {
 	keyMap[35] = 5;
 	keyMap[37] = 6;
 	keyMap[36] = 7;
+	keyMap[ROT.VK_K] = 0;
+	keyMap[ROT.VK_U] = 1;
+	keyMap[ROT.VK_L] = 2;
+	keyMap[ROT.VK_N] = 3;
+	keyMap[ROT.VK_J] = 4;
+	keyMap[ROT.VK_B] = 5;
+	keyMap[ROT.VK_H] = 6;
+	keyMap[ROT.VK_Y] = 7;
 
 	/* one of numpad directions? */
 	if (!(code in keyMap)) { return; }

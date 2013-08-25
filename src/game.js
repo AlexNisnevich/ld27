@@ -27,7 +27,8 @@ var Game = {
 		door: new Audio("sounds/door.wav"),
 		stairs: new Audio("sounds/stairs.wav"),
 		pickup: new Audio("sounds/pickup.wav"),
-		dragon: new Audio("sounds/dragon.wav")
+		dragon: new Audio("sounds/dragon.wav"),
+		explosion: new Audio("sounds/explosion.wav")
 	},
 
 	init: function() {

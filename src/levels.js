@@ -33,6 +33,7 @@ Game._populateLevel = function(freeCells) {
 		this._createMonsters(Hobgoblin, freeCells, 3, 5);
 		this._createMonsters(Tree, freeCells, 3, 5);
 		this._createMonsters(DragonHatchling, freeCells, 2, 5);
+		this._createMonsters(Grue, freeCells, 1, 1);
 	}  else if (this.levelNum == 7) {
 		this._createMonsters(Aardvark, freeCells, 2, 4);
 		this._createMonsters(Goblin, freeCells, 5, 10);

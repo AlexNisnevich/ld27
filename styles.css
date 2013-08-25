@@ -152,7 +152,7 @@ canvas.hidden {
 	width: 800px;
 	display: none;
 	height: 425px;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 .memoriamCaption {
