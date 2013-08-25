@@ -48,7 +48,7 @@ var Monster = Class.ext({
 
 	draw: function() {
 		if (this._isVisible()) {
-			Game.display.draw(this._x, this._y, this._symbol, this._color, '#333');
+			Game.display.draw(this._x, this._y, this._symbol, this._color, Game.calculateLighting(this._x, this._y));
 		}
 	},
 
@@ -77,6 +77,7 @@ var Aardvark = Monster.ext({
 		this._name = 'aardvark'
 		this._hp = 5;
 		this._damage = '1d4';
+		this._cr = 5;
 	}
 });
 
@@ -90,5 +91,6 @@ var Bunny = Monster.ext({
 		this._name = 'bunny'
 		this._hp = 3;
 		this._damage = '1d3';
+		this._cr = 3;
 	}
 });

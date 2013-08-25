@@ -20,7 +20,8 @@ var Game = {
 		hit: new Audio("sounds/hit.wav"),
 		dead: new Audio("sounds/dead.wav"),
 		door: new Audio("sounds/door.wav"),
-		stairs: new Audio("sounds/stairs.wav")
+		stairs: new Audio("sounds/stairs.wav"),
+		pickup: new Audio("sounds/pickup.wav")
 	},
 
 	init: function() {
@@ -131,13 +132,17 @@ var Game = {
 		this._createMonsters(Bunny, freeCells, 5, 10);
 		this._createObjects('stairs', freeCells, 1, 1);
 
-		this.player = this._createBeing(Player, freeCells);
+		if (!this.player) {
+			this.player = this._createBeing(Player, freeCells);
+		} else {
+			this._placePlayer(freeCells);
+		}
 
 		this._drawVisibleArea();
 	},
 
 	_createObjects: function(type, freeCells, min, max) {
-		_(getRandomInt(min, max)).times(function () {
+		_(_.random(min, max)).times(function () {
 			var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
 			var key = freeCells.splice(index, 1)[0];
 			Game.map[key] = type;
@@ -156,8 +161,21 @@ var Game = {
 		return being;
 	},
 
+	_placePlayer: function(freeCells) {
+		var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
+		var key = freeCells.splice(index, 1)[0];
+		var parts = key.split(",");
+		var x = parseInt(parts[0]);
+		var y = parseInt(parts[1]);
+
+		this.player._x = x;
+		this.player._startX = x;
+		this.player._y = y;
+		this.player._startY = y;
+	},
+
 	_createMonsters: function(type, freeCells, min, max) {
-		_(getRandomInt(min, max)).times(function () {
+		_(_.random(min, max)).times(function () {
 			var monster = Game._createBeing(type, freeCells);
 			Game.monsters.push(monster);
 		});
@@ -177,10 +195,13 @@ var Game = {
 
 		this.display.clear();
 		this.scheduler.clear();
+		Game.scheduler.add(this.player, true);
 		this._generateMap();
 	},
 
 	_drawVisibleArea: function() {
+		this.display.clear();
+
 		var visitedPoints = [];
 		this.visiblePoints = [];
 
@@ -213,12 +234,7 @@ var Game = {
 
 		_.each(this.exploredPoints, function (key) {
 			var pt = _.map(key.split(','), function (x) {return parseInt(x); });
-			if (_(Game.visiblePoints).contains(key)) {
-				var bgColor = '#333';
-			} else {
-				var bgColor = '#000';
-			}
-			Game.display.draw(pt[0], pt[1], Game.objects[Game.map[key]].symbol, Game.objects[Game.map[key]].color, bgColor);
+			Game.display.draw(pt[0], pt[1], Game.objects[Game.map[key]].symbol, Game.objects[Game.map[key]].color, Game.calculateLighting(pt[0], pt[1]));
 		});
 
 		_(this.monsters).each(function (monster) {

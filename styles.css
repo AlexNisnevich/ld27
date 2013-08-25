@@ -1,6 +1,6 @@
 body {
 	text-align: center;
-	font-family: monospace;
+	font-family: 'Inconsolata', monospace;
 	background: #222;
 	color: white;
 }
@@ -39,8 +39,16 @@ body {
 	font-size: 1.3em;
 }
 
+#sidebar #stats #level {
+	margin-bottom: 5px;
+}
+
 #sidebar #stats #hp {
 	color: red;
+}
+
+#sidebar #stats #xp {
+	color: green;
 }
 
 #sidebar #shadowLog {
