@@ -33,6 +33,10 @@ Game.dieRoll = function (roll) {
 	return result;
 }
 
+Game.experienceForLevel = function (lvl) {
+	return Math.round(Math.pow(1.7, lvl - 2) * 10);
+}
+
 Game.getRandomName = function (callback) {
 	if (window.location.host != '') {
 		// remote
@@ -50,10 +54,11 @@ Game.generateCharacter = function (lvl) {
 	var attributes = {
 		constitution: 4,
 		strength: 2,
-		dexterity: 2
+		dexterity: 2,
+		wisdom: 2
 	}
 
-	_(lvl).times(function () {
+	_(lvl * 2).times(function () {
 		var attribute = _(attributes).keys()[_.random(0, _(attributes).keys().length - 1)];
 		attributes[attribute]++;
 	});
@@ -61,7 +66,8 @@ Game.generateCharacter = function (lvl) {
 	var stats = {
 		hp: Game.dieRoll(attributes.constitution + 'd4'),
 		damage: '1d' + (attributes.strength * 2),
-		viewRadius: _.random(Math.min(Math.floor(attributes.dexterity / 2) + 2, 6), 6)
+		viewRadius: _.random(Math.min(Math.floor(attributes.wisdom / 2) + 2, 6), 6),
+		speed: Math.max(1, Math.min(2, (_.random(attributes.dexterity, attributes.dexterity * 2) + 5) / 10)).toFixed(1)
 	}
 
 	return stats;

@@ -28,7 +28,7 @@ var Game = {
 		this.display = new ROT.Display({spacing:1.1});
 		$('#canvasContainer').append(this.display.getContainer());
 
-		this.scheduler = new ROT.Scheduler.Simple();
+		this.scheduler = new ROT.Scheduler.Speed();
 
 		this._generateMap();
 
@@ -68,7 +68,7 @@ var Game = {
 		clearTimeout(this.countdownTimeout);
 		this._countdown();
 
-		this.sounds.theme.volume = 0.5;
+		this.sounds.theme.volume = 0.3;
 		this.sounds.theme.pause();
 		this.sounds.theme.load();
 		this.sounds.theme.play();
@@ -84,7 +84,7 @@ var Game = {
 		} else {
 			this.countdownTimeout = setTimeout(function () {
 				Game._countdown();
-			}, 1000);
+			}, 1000 * player._speed);
 		}
 	},
 

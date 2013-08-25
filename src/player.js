@@ -21,9 +21,10 @@ Player.prototype.init = function () {
 	this._hp = this._maxHP;
 	this._damage = stats.damage;
 	this._viewRadius = stats.viewRadius;
+	this._speed = stats.speed;
 
 	this._exp = 0;
-	this._expThreshold = Math.pow(2, this._lvl - 1) * 10;
+	this._expThreshold = Game.experienceForLevel(this._lvl + 1);
 }
 
 Player.prototype.generateName = function() {
@@ -47,7 +48,7 @@ Player.prototype.generateName = function() {
 	}, 1500);
 }
 
-Player.prototype.getSpeed = function() { return 100; }
+Player.prototype.getSpeed = function() { return this._speed; }
 Player.prototype.getX = function() { return this._x; }
 Player.prototype.getY = function() { return this._y; }
 Player.prototype.at = function (x, y) { return this._x == x && this._y == y; }
@@ -139,6 +140,7 @@ Player.prototype.draw = function() {
 	$('#xp').text(this._exp + '/' + this._expThreshold + ' XP');
 	$('#damage').text('Damage: ' + this._damage);
 	$('#vision').text('Vision: ' + this._viewRadius);
+	$('#speed').text('Speed: ' + this._speed);
 }
 
 Player.prototype.die = function () {
@@ -161,7 +163,7 @@ Player.prototype._attack = function (monster) {
 		if (this._exp >= this._expThreshold) {
 			this._lvl++;
 			this._exp = 0;
-			this._expThreshold = Math.pow(2, this._lvl - 1) * 10;
+			this._expThreshold = Game.experienceForLevel(this._lvl + 1);
 			Game.sounds.pickup.play();
 			Game.log('You have reached level ' + this._lvl + '!');
 		}

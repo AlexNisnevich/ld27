@@ -9,6 +9,8 @@ var Monster = Class.ext({
 		return this._x == x && this._y == y;
 	},
 
+	getSpeed: function() { return 1; },
+
 	_isVisible: function () {
 		return _(Game.visiblePoints).contains(this._x + "," + this._y);
 	},
