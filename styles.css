@@ -80,6 +80,10 @@ canvas.hidden {
 	color: green;
 }
 
+.stats .location {
+	color: teal;
+}
+
 #chooseCharacter {
 	position: absolute;
 	width: 800px;

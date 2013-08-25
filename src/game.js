@@ -1,6 +1,7 @@
 var Game = {
 	display: null,
 
+	levelNum: 1,
 	map: {},
 	rooms: [],
 	exploredPoints: [],
@@ -17,6 +18,7 @@ var Game = {
 
 	sounds: {
 		theme: new Audio("sounds/10rogue.wav"),
+		menu: new Audio("sounds/characterSelect.wav"),
 
 		hit: new Audio("sounds/hit.wav"),
 		dead: new Audio("sounds/dead.wav"),
@@ -37,6 +39,10 @@ var Game = {
 		this.engine.start();
 
 		Game.chooseCharacter(1);
+
+		this.sounds.theme.volume = 0.4;
+		this.sounds.menu.volume = 0.3;
+		this.sounds.menu.loop = true;
 	},
 
 	chooseCharacter: function(lvl) {
@@ -45,6 +51,7 @@ var Game = {
 
 		$('#chooseCharacter').show();
 		$('canvas').addClass('hidden');
+		this.sounds.menu.play();
 
 		$('#chooseCharacter .stats').each(function (i, pane) {
 			var character = Game.generateCharacter(lvl);
@@ -62,6 +69,8 @@ var Game = {
 				Game.choosingCharacter = false;
 				$('#chooseCharacter').hide();
 				$('canvas').removeClass('hidden');
+				Game.sounds.menu.pause();
+				Game.sounds.menu.load();
 			})
 		});
 	},
@@ -101,7 +110,6 @@ var Game = {
 		this.countdownTimer = 11;
 		clearTimeout(this.countdownTimeout);
 
-		this.sounds.theme.volume = 0.3;
 		this.sounds.theme.pause();
 		this.sounds.theme.load();
 	},
@@ -159,9 +167,6 @@ var Game = {
 			room.getDoors(drawDoor.bind(this));
 		}
 
-		this._createMonsters(Aardvark, freeCells, 5, 10);
-		this._createMonsters(Bunny, freeCells, 5, 10);
-		this._createMonsters(Chicken, freeCells, 5, 10);
 		this._createObjects('stairs', freeCells, 1, 1);
 
 		if (!this.player) {
@@ -169,6 +174,8 @@ var Game = {
 		} else {
 			this._placePlayer(freeCells);
 		}
+
+		this._populateLevel(freeCells);
 	},
 
 	_createObjects: function(type, freeCells, min, max) {
@@ -204,7 +211,9 @@ var Game = {
 		this.player._startY = y;
 	},
 
-	_createMonsters: function(type, freeCells, min, max) {
+	_createMonsters: function(type, freeCells, min, max, chance) {
+		if (chance && Math.random() > chance) { return; }
+
 		_(_.random(min, max)).times(function () {
 			var monster = Game._createBeing(type, freeCells);
 			Game.monsters.push(monster);
@@ -218,6 +227,7 @@ var Game = {
 	},
 
 	nextLevel: function() {
+		this.levelNum++;
 		this.map = {};
 		this.rooms = [];
 		this.exploredPoints = [];

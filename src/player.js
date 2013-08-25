@@ -95,7 +95,7 @@ Player.prototype.handleEvent = function(e) {
 	}
 
 	// sometimes recover health
-	if (Math.random() < 0.1 && this._hp < this._maxHP) {
+	if (Math.random() < 0.2 && this._hp < this._maxHP) {
 		this._hp++;
 	}
 
@@ -124,9 +124,11 @@ Player.prototype.draw = function() {
 	$('#sidebar .xp').text(this._exp + '/' + this._expThreshold + ' XP');
 	$('#sidebar .damage').text('Damage: ' + this._damage);
 	$('#sidebar .speed').text('Speed: ' + this._speed);
+	$('#sidebar .location').text('Location: Dungeon Floor ' + Game.levelNum);
 }
 
 Player.prototype.die = function () {
+	this.draw();
 	Game.map[this._x+","+this._y] = 'corpse';
 	Game.sounds.dead.play();
 
@@ -148,7 +150,7 @@ Player.prototype._attack = function (monster) {
 			Game.sounds.pickup.play();
 			Game.log('You have reached level ' + this._lvl + '!');
 		}
-		Game.removeBeing(monster);
+		monster.die();
 	}
 	this.endTurn();
 }

@@ -56,7 +56,7 @@ var Monster = Class.ext({
 	},
 
 	draw: function() {
-		if (this._isVisible()) {
+		if (this._isVisible() && !Game.player._blinded) {
 			Game.display.draw(this._x, this._y, this._symbol, this._color, Game.calculateLighting(this._x, this._y));
 		}
 	},
@@ -72,6 +72,10 @@ var Monster = Class.ext({
 		} else {
 			player.draw();
 		}
+	},
+
+	die: function() {
+		Game.removeBeing(this);
 	}
 });
 
@@ -115,4 +119,73 @@ var Chicken = Monster.ext({
 		this._damage = '1d3';
 		this._cr = 3;
 	}
+});
+
+var Goblin = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'G';
+		this._color = 'red';
+
+		this._name = 'goblin'
+		this._hp = 10;
+		this._damage = '2d4';
+		this._cr = 15;
+	}
+});
+
+var Grue = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'G';
+		this._color = 'red';
+
+		this._name = 'grue'
+		this._hp = 12;
+		this._damage = '2d4';
+		this._cr = 20;
+	},
+	act: function() {
+		this._super();
+
+		if (this._isEncountered() && !Game.player._blinded) {
+			Game.log('You have encountered the grue.');
+			Game.player._blinded = true;
+		}
+	},
+	die: function() {
+		this._super();
+		Game.player._blinded = false;
+	}
+});
+
+var Hobgoblin = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'H';
+		this._color = 'red';
+
+		this._name = 'hobgoblin'
+		this._hp = 12;
+		this._damage = '2d6';
+		this._cr = 20;
+	}
+});
+
+var Tree = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'T';
+		this._color = 'red';
+
+		this._name = 'tree'
+		this._hp = 50;
+		this._damage = '2d4';
+		this._cr = 40;
+	},
+	getSpeed: function() { return 1/3; }
 });

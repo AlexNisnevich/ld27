@@ -12,7 +12,7 @@
 
 Game.calculateLighting = function (x, y) {
 	var key = x+","+y;
-	if (_(Game.visiblePoints).contains(key)) {
+	if (_(Game.visiblePoints).contains(key) && !Game.player._blinded) {
 		var dist = Math.abs(Game.player.getX() - x) + Math.abs(Game.player.getY() - y);
 		return ROT.Color.toHex(ROT.Color.interpolate([90, 90, 90], [30, 30, 30], dist / Game.player._viewRadius));
 	} else {
@@ -41,23 +41,28 @@ Game.generateName = function () {
 	return Game.first_names[_.random(0, Game.first_names.length - 1)];
 }
 
-Game.generateCharacter = function (lvl, callback) {
+Game.generateCharacter = function (lvl) {
 	var attributes = {
-		constitution: 4,
+		constitution: 3,
 		strength: 2,
 		dexterity: 2
 	}
 
-	_(lvl * 2).times(function () {
+	_(lvl * 3).times(function () {
 		var attribute = _(attributes).keys()[_.random(0, _(attributes).keys().length - 1)];
 		attributes[attribute]++;
 	});
 
+	var hp = Game.dieRoll(attributes.constitution + 'd5');
+	var attackNum = Math.floor(attributes.strength * 2 / 10) + 1;
+	var attackDice = Math.floor(attributes.strength * 2 / attackNum);
+	var speed = Math.max(1, Math.min(2, (Math.floor(_.random(attributes.dexterity, attributes.dexterity * 1.5)) + 5) / 10)).toFixed(1);
+
 	var stats = {
 		attributes: attributes,
-		hp: Game.dieRoll(attributes.constitution + 'd4'),
-		damage: '1d' + (attributes.strength * 2),
-		speed: Math.max(1, Math.min(2, (_.random(attributes.dexterity, attributes.dexterity * 2) + 5) / 10)).toFixed(1)
+		hp: hp,
+		damage: attackNum + 'd' + attackDice,
+		speed: speed
 	}
 
 	stats.name = Game.generateName();
