@@ -2,6 +2,7 @@ var Monster = Class.ext({
 	init: function(x, y) {
 		this._x = x;
 		this._y = y;
+		this._range = 1;
 		this.draw();
 	},
 
@@ -39,7 +40,7 @@ var Monster = Class.ext({
 
 			if (path.length > 0 && path.length < 15) {
 				path.shift();
-				if (path.length <= 1) {
+				if (path.length <= this._range && this._isVisible) {
 					this._attack(Game.player);
 				} else {
 					x = path[0][0];
@@ -282,3 +283,135 @@ var DragonHatchling = Monster.ext({
 	getSpeed: function() { return 1.5; }
 });
 DragonHatchling._cr = 20;
+
+// More enemies in infinite mode
+
+var Potato = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'p';
+		this._color = 'red';
+
+		this._name = 'potato';
+		this._hp = 25;
+		this._damage = '1d4';
+		this._cr = 15;
+	},
+	getSpeed: function() { return 1/3; }
+});
+Potato._cr = 15;
+
+var GoblinArcher = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'A';
+		this._color = 'red';
+
+		this._name = 'goblin archer';
+		this._hp = 20;
+		this._damage = '1d6';
+		this._cr = 60;
+		this._range = 3;
+	}
+});
+GoblinArcher._cr = 60;
+
+var Jalapeno = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'J';
+		this._color = 'red';
+
+		this._name = 'jalapeno';
+		this._hp = 15;
+		this._damage = '1d4';
+		this._cr = 75;
+		this._range = 3;
+	},
+	getSpeed: function() { return 3; }
+});
+Jalapeno._cr = 75;
+
+var MightyRedwood = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'R';
+		this._color = 'red';
+
+		this._name = 'mighty redwood';
+		this._hp = 100;
+		this._damage = '2d6';
+		this._cr = 150;
+	},
+	getSpeed: function() { return 1/5; }
+});
+MightyRedwood._cr = 150;
+
+var Rat = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'r';
+		this._color = 'red';
+
+		this._name = 'rat';
+		this._hp = 10;
+		this._damage = '1d8';
+		this._cr = 25;
+	},
+	getSpeed: function() { return 3; }
+});
+Rat._cr = 25;
+
+var Horse = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'h';
+		this._color = 'red';
+
+		this._name = 'horse';
+		this._hp = 25;
+		this._damage = '1d8';
+		this._cr = 45;
+	},
+	getSpeed: function() { return 2; }
+});
+Horse._cr = 40;
+
+var Zebra = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'Z';
+		this._color = 'red';
+
+		this._name = 'horse';
+		this._hp = 30;
+		this._damage = '1d10';
+		this._cr = 60;
+	},
+	getSpeed: function() { return 2; }
+});
+Zebra._cr = 40;
+
+var Unicorn = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 'U';
+		this._color = 'red';
+
+		this._name = 'horse';
+		this._hp = 40;
+		this._damage = '1d12';
+		this._cr = 100;
+		this._range = 2;
+	},
+	getSpeed: function() { return 2; }
+});
+Unicorn._cr = 100;

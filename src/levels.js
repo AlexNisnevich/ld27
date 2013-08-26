@@ -46,12 +46,11 @@ Game._populateLevel = function(freeCells) {
 	} else {
 		// infinite mode
 
-		// best fit quartic approximation based on story data
-		var crFloor = Math.floor((385.143 - 478.076 * this.levelNum + 234.958 * Math.pow(this.levelNum, 2) - 37.8662 * Math.pow(this.levelNum, 3) + 2.17045 * Math.pow(this.levelNum, 4)) / 2);
+		var crFloor = this.levelNum  * 75;
 		var targetCR = _.random(crFloor, 2 * crFloor);
 
-		var possibleMonsters = _([Aardvark, Bunny, Chicken, Goblin, Grue, Hobgoblin, Tree, DragonHatchling, Dragon]).filter(function (monster) {
-			return (monster._cr > crFloor * 0.01 && monster._cr < crFloor * 0.3);
+		var possibleMonsters = _([Aardvark, Bunny, Chicken, Goblin, Grue, Hobgoblin, Tree, DragonHatchling, Dragon, Potato, GoblinArcher, Jalapeno, MightyRedwood, Rat, Horse, Zebra, Unicorn]).filter(function (monster) {
+			return (monster._cr > crFloor * 0.005 && monster._cr < crFloor * 0.2);
 		});
 
 		var currentCR = 0;
