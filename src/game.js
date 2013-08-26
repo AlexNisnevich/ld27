@@ -64,6 +64,7 @@ var Game = {
 
 		$('#chooseCharacter .stats').each(function (i, pane) {
 			var character = Game.generateCharacter(lvl);
+			$(pane).find('.sprite').html(character.sprite.big.html());
 			$(pane).find('.name').text(character.name);
 			$(pane).find('.level').text('Level ' + lvl);
 			$(pane).find('.hp').text(character.hp + ' HP');
@@ -99,10 +100,16 @@ var Game = {
 		_(this.fallenHeroes).each(function (hero) {
 			var name = hero[0];
 			var causeOfDeath = hero[1];
+			var sprite = hero[2];
 
 			var nameSpan = $('<span>').addClass('name').text(name);
 			var causeOfDeathSpan = $('<span>').addClass('causeOfDeath').text(causeOfDeath);
-			$('<div>').append(nameSpan).append(causeOfDeathSpan).appendTo('#heroes')
+			var spriteDiv = $('<div>').addClass('sprite').html(sprite.html());
+			$('<div>')
+				.append(spriteDiv)
+				.append(nameSpan)
+				.append(causeOfDeathSpan)
+				.appendTo('#heroes')
 		})
 	},
 

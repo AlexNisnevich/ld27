@@ -31,7 +31,9 @@ canvas.hidden {
 
 #sidebar #countdown {
 	font-size: 2em;
+	float: right;
 	margin-top: 10px;
+	margin-right: 10px;
 }
 
 #sidebar #shadowLog {
@@ -56,7 +58,6 @@ canvas.hidden {
 	width: 40px;
 	margin: 0 auto;
 	border: 2px solid yellow;
-	margin-bottom: 10px;
 }
 
 .stats:hover .key {
@@ -89,7 +90,7 @@ canvas.hidden {
 
 #chooseCharacterCaption {
 	color: yellow;
-	margin-top: 100px;
+	margin-top: 40px;
 }
 
 #chooseCharacter .stats {
@@ -190,7 +191,8 @@ canvas.hidden {
 
 #heroes div {
 	float: left;
-	width: 250px;
+	width: 260px;
+	text-align: left;
 }
 
 #heroes .name {
@@ -246,4 +248,65 @@ canvas.hidden {
 #start a:hover, #continueButton:hover {
 	color: #333;
 	background: yellow;
+}
+
+.sprite {
+	width: 100px;
+	height: 125px;
+	margin: 0 auto;
+}
+
+.sprite div {
+	width: 100px;
+	height: 125px;
+	position: absolute;
+	background-image: url('images/sprites_big_trans.png');
+}
+
+.sprite .body.front {
+	background-position-y: 0px;
+	z-index: 4;
+}
+
+.sprite .head.front {
+	background-position-y: -125px;
+	z-index: 3;
+}
+
+.sprite .body.back {
+	background-position-y: -250px;
+	z-index: 2;
+}
+
+.sprite .head.back {
+	background-position-y: 125px;
+	z-index: 1;
+}
+
+#heroes .sprite {
+	width: 20px;
+	height: 25px;
+	margin: -5px 5px 0 10px;
+}
+
+#heroes .sprite div {
+	width: 20px;
+	height: 25px;
+	background-image: url('images/sprites_small_trans.png');
+}
+
+#heroes .sprite .body.front {
+	background-position-y: 0px;
+}
+
+#heroes .sprite .head.front {
+	background-position-y: -25px;
+}
+
+#heroes .sprite .body.back {
+	background-position-y: -50px;
+}
+
+#heroes .sprite .head.back {
+	background-position-y: 25px;
 }

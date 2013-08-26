@@ -415,3 +415,19 @@ var Unicorn = Monster.ext({
 	getSpeed: function() { return 2; }
 });
 Unicorn._cr = 100;
+
+var Squirrel = Monster.ext({
+	init: function(x, y){
+		this._super(x, y);
+
+		this._symbol = 's';
+		this._color = 'red';
+
+		this._name = 'squirrel';
+		this._hp = 8;
+		this._damage = '1d6';
+		this._cr = 15;
+	},
+	getSpeed: function() { return 4; }
+});
+Squirrel._cr = 15;

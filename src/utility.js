@@ -62,7 +62,9 @@ Game.generateCharacter = function (lvl) {
 	var speed = Math.max(1, Math.min(2, (Math.floor(_.random(attributes.dexterity, attributes.dexterity * 1.5)) + 5) / 10)).toFixed(1);
 	var vision = Math.max(3, (Math.floor(_.random(attributes.wisdom, attributes.wisdom * 1.5))));
 
-	var stats = {
+	var char = {
+		name: this.generateName(),
+		sprite: this.generateSprite(18, 100, 20),
 		level: lvl,
 		attributes: attributes,
 		hp: hp,
@@ -71,7 +73,25 @@ Game.generateCharacter = function (lvl) {
 		vision: vision
 	}
 
-	stats.name = Game.generateName();
+	return char;
+}
 
-	return stats;
+Game.generateSprite = function (variants, widthBig, widthSmall) {
+	var headNum = _.random(0, variants - 1);
+	var bodyNum = _.random(0, variants - 1);
+
+	var spriteBig = $('<div>').addClass('sprite');
+	spriteBig.html('<div class="body front"></div><div class="head front"></div><div class="body back"></div><div class="head back"></div>');
+	spriteBig.find('.head').css({'background-position-x': headNum * widthBig});
+	spriteBig.find('.body').css({'background-position-x': bodyNum * widthBig});
+
+	var spriteSmall = $('<div>').addClass('sprite');
+	spriteSmall.html('<div class="body front"></div><div class="head front"></div><div class="body back"></div><div class="head back"></div>');
+	spriteSmall.find('.head').css({'background-position-x': headNum * widthSmall});
+	spriteSmall.find('.body').css({'background-position-x': bodyNum * widthSmall});
+
+	return {
+		big: spriteBig,
+		small: spriteSmall
+	};
 }

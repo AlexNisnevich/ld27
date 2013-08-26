@@ -13,6 +13,7 @@ Player.prototype.setCharacter = function (character) {
 	this._y = this._startY;
 
 	player._name = character.name;
+	player._sprite = character.sprite;
 	player._lvl = character.level;
 	player._maxHP = character.hp;
 	player._hp = player._maxHP;
@@ -155,6 +156,8 @@ Player.prototype.endTurn = function() {
 Player.prototype.draw = function() {
 	Game.display.draw(this._x, this._y, this._symbol, this._color, Game.calculateLighting(this._x, this._y));
 
+
+	$('#sidebar .sprite').html(this._sprite.big.html())
 	$('#sidebar .name').text(this._name ? this._name : ' ');
 	$('#sidebar .level').text('Level ' + this._lvl);
 	$('#sidebar .hp').text(this._hp + '/' + this._maxHP + ' HP');
@@ -171,7 +174,7 @@ Player.prototype.die = function (causeOfDeath) {
 	this.draw();
 	Game.map[this._x+","+this._y] = 'corpse';
 	Game.sounds.dead.play();
-	Game.fallenHeroes.push([this._name, causeOfDeath])
+	Game.fallenHeroes.push([this._name, causeOfDeath, this._sprite.small])
 
 	Game.chooseCharacter(this._lvl);
 }

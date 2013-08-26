@@ -49,7 +49,7 @@ Game._populateLevel = function(freeCells) {
 		var crFloor = this.levelNum  * 75;
 		var targetCR = _.random(crFloor, 2 * crFloor);
 
-		var possibleMonsters = _([Aardvark, Bunny, Chicken, Goblin, Grue, Hobgoblin, Tree, DragonHatchling, Dragon, Potato, GoblinArcher, Jalapeno, MightyRedwood, Rat, Horse, Zebra, Unicorn]).filter(function (monster) {
+		var possibleMonsters = _([Aardvark, Bunny, Chicken, Goblin, Grue, Hobgoblin, Tree, DragonHatchling, Dragon, Potato, GoblinArcher, Jalapeno, MightyRedwood, Rat, Horse, Zebra, Unicorn, Squirrel]).filter(function (monster) {
 			return (monster._cr > crFloor * 0.005 && monster._cr < crFloor * 0.2);
 		});
 
