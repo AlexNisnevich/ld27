@@ -76,6 +76,7 @@ var Game = {
 				Game.choosingCharacter = false;
 				$('#chooseCharacter').hide();
 				$('#description').hide();
+				$('#reference').hide();
 				$('canvas').removeClass('hidden');
 				Game.sounds.menu.pause();
 				Game.sounds.menu.load();
@@ -385,6 +386,20 @@ var Game = {
 		})
 
 		this.player.draw();
+	},
+
+	help: function () {
+		if (!$('#reference').is(":visible")) {
+			$('canvas').addClass('hidden');
+			$('#reference').show();
+		} else {
+			$('canvas').removeClass('hidden');
+			$('#reference').hide();
+		}
+
+		if (!Game.choosingCharacter) {
+			Game.pause();
+		}
 	}
 };
 
@@ -393,5 +408,15 @@ $(document).ready(function () {
 
 	$('#muteButton').click(function () {
 		Game.mute();
-	})
+	});
+
+	$('#helpButton').click(function () {
+		Game.help();
+	});
+
+	$('#gameArea').click(function () {
+		if ($('#reference').is(":visible")) {
+			Game.help();
+		}
+	});
 })

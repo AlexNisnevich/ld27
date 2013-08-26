@@ -22,88 +22,118 @@
 	<body>
 		<h1>10 Second Roguelike</h1>
 		<div id="container">
-			<div id="muteControl">
+			<div id="buttons">
+				<a id="helpButton">
+					<img src="images/help.png" title="Reference">
+				</a>
 				<a id="muteButton">
-					<img id="muteImg" src="images/mute-on.png">
+					<img id="muteImg" src="images/mute-on.png" title="Mute">
 				</a>
 			</div>
-			<div id="canvasContainer"></div>
-			<div id="sidebar">
-				<div id="description">
-					Darkness has descended on Atalaria. A mighty Time Dragon has taken residence in the dungeon beneath the city and has warped the fabric of spacetime, causing the city's inhabitants to age at an accelerated rate.<br/></br/>
-					You have been chosen to venture into the dungeon and face the dragon there. You will surely fail, but perhaps one of your descendants will succeed.
-				</div>
-				<div id="countdown"></div>
-				<div class="stats">
-					<div class="name"></div>
-					<div class="level"></div>
-					<div class="meter">
-						<span class="xpBar"></span>
+			<div id="gameArea">
+				<div id="canvasContainer"></div>
+				<div id="sidebar">
+					<div id="description">
+						Darkness has descended on Atalaria. A mighty Time Dragon has taken residence in the dungeon beneath the city and has warped the fabric of spacetime, causing the city's inhabitants to age at an accelerated rate.<br/></br/>
+						You have been chosen to venture into the dungeon and face the dragon there. You will surely fail, but perhaps one of your descendants will succeed.
 					</div>
-					<div class="xp"></div>
-					<div class="hp"></div>
-					<div class="damage"></div>
-					<div class="speed"></div>
-					<div class="vision"></div>
-					<div class="location"></div>
+					<div id="countdown"></div>
+					<div class="stats">
+						<div class="name"></div>
+						<div class="level"></div>
+						<div class="meter">
+							<span class="xpBar"></span>
+						</div>
+						<div class="xp"></div>
+						<div class="hp"></div>
+						<div class="damage"></div>
+						<div class="speed"></div>
+						<div class="vision"></div>
+						<div class="location"></div>
+					</div>
+					<div id="shadowLog"></div>
+					<div id="log"></div>
 				</div>
-				<div id="shadowLog"></div>
-				<div id="log"></div>
-			</div>
-			<div id="chooseCharacter">
-				<div id="chooseCharacterCaption">
-					Choose your hero!
+				<div id="chooseCharacter">
+					<div id="chooseCharacterCaption">
+						Choose your hero!
+					</div>
+					<div class="stats" id="char1">
+						<div class="key">1</div>
+						<div class="name"></div>
+						<div class="level"></div>
+						<div class="hp"></div>
+						<div class="damage"></div>
+						<div class="speed"></div>
+						<div class="vision"></div>
+					</div>
+					<div class="stats" id="char2">
+						<div class="key">2</div>
+						<div class="name"></div>
+						<div class="level"></div>
+						<div class="hp"></div>
+						<div class="damage"></div>
+						<div class="speed"></div>
+						<div class="vision"></div>
+					</div>
+					<div class="stats" id="char3">
+						<div class="key">3</div>
+						<div class="name"></div>
+						<div class="level"></div>
+						<div class="hp"></div>
+						<div class="damage"></div>
+						<div class="speed"></div>
+						<div class="vision"></div>
+					</div>
 				</div>
-				<div class="stats" id="char1">
-					<div class="key">1</div>
-					<div class="name"></div>
-					<div class="level"></div>
-					<div class="hp"></div>
-					<div class="damage"></div>
-					<div class="speed"></div>
-					<div class="vision"></div>
+				<div id="memoriam">
+					<div class="memoriamCaption">
+						<p>Congratulations, intrepid hero! You have slain the dragon and restored peace to Atalaria.</p>
+						<p>Give yourself a pat on the back. You done good.</p>
+					</div>
+					<div class="memoriamCaption">
+						<p><b>10 Second Roguelike</b> is a game by <a href="http://alex.nisnevich.com" target="_blank">Alex Nisnevich</a>.</p>
+					</div>
+					<div class="memoriamCaption">
+						<p>Special thanks to:</p>
+					</div>
+					<div id="thanks">
+						<div>Jacob</div>
+						<div>James</div>
+						<div>Jimmy</div>
+						<div>Natasha</div>
+						<div>Sam</div>
+					</div>
+					<div class="memoriamCaption">
+						<p>In memory of:</p>
+					</div>
+					<div id="heroes">
+					</div>
 				</div>
-				<div class="stats" id="char2">
-					<div class="key">2</div>
-					<div class="name"></div>
-					<div class="level"></div>
-					<div class="hp"></div>
-					<div class="damage"></div>
-					<div class="speed"></div>
-					<div class="vision"></div>
-				</div>
-				<div class="stats" id="char3">
-					<div class="key">3</div>
-					<div class="name"></div>
-					<div class="level"></div>
-					<div class="hp"></div>
-					<div class="damage"></div>
-					<div class="speed"></div>
-					<div class="vision"></div>
-				</div>
-			</div>
-			<div id="memoriam">
-				<div class="memoriamCaption">
-					<p>Congratulations, intrepid hero! You have slain the dragon and restored peace to Atalaria.</p>
-					<p>Give yourself a pat on the back. You done good.</p>
-				</div>
-				<div class="memoriamCaption">
-					<p><b>10 Second Roguelike</b> is a game by <a href="http://alex.nisnevich.com" target="_blank">Alex Nisnevich</a>.</p>
-				</div>
-				<div class="memoriamCaption">
-					<p>Special thanks to:</p>
-				</div>
-				<div id="thanks">
-					<div>Jacob</div>
-					<div>James</div>
-					<div>Jimmy</div>
-					<div>Natasha</div>
-					<div>Sam</div>
-				</div>
-				<div class="memoriamCaption">
-					<p>In memory of:</p>
-				</div>
-				<div id="heroes">
+				<div id="reference">
+					<h2>Reference</h2>
+					<table>
+						<tr>
+							<td class="symbol" style="color: green;">@</td>
+							<td class="definition">Player</td>
+						</tr>
+						<tr>
+							<td class="symbol" style="color: yellow;">+ -</td>
+							<td class="definition">Door (closed / open)</td>
+						</tr>
+						<tr>
+							<td class="symbol" style="color: #ccc;">x</td>
+							<td class="definition">Player corpse</td>
+						</tr>
+						<tr>
+							<td class="symbol" style="color: LightBlue;">></td>
+							<td class="definition">Stairs</td>
+						</tr>
+						<tr>
+							<td class="symbol" style="color: red;">a b c d D G H</td>
+							<td class="definition">Monsters</td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</div>
