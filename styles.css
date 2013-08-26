@@ -84,6 +84,7 @@ canvas.hidden {
 #chooseCharacter {
 	position: absolute;
 	width: 800px;
+	display: none;
 }
 
 #chooseCharacterCaption {
@@ -225,4 +226,24 @@ canvas.hidden {
 	width: 250px;
 	text-align: left;
 	padding-left: 10px;
+}
+
+#start {
+	position: absolute;
+	width: 800px;
+}
+
+#start a, #continueButton {
+	font-size: 1.4em;
+	color: yellow;
+	padding: 10px;
+	border: 1px solid yellow;
+	margin: 50px;
+	display: block;
+	cursor: pointer;
+}
+
+#start a:hover, #continueButton:hover {
+	color: #333;
+	background: yellow;
 }

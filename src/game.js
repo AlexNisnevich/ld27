@@ -1,4 +1,6 @@
 var Game = {
+	mode: null,
+
 	display: null,
 
 	levelNum: 1,
@@ -31,9 +33,9 @@ var Game = {
 		explosion: new Audio("sounds/explosion.wav")
 	},
 
-	init: function() {
-		this.display = new ROT.Display({spacing:1.1});
-		$('#canvasContainer').append(this.display.getContainer());
+	init: function(mode) {
+		this.mode = mode;
+		$('#start').hide();
 
 		this.scheduler = new ROT.Scheduler.Speed();
 
@@ -56,6 +58,7 @@ var Game = {
 		this._stopCountdown();
 
 		$('#chooseCharacter').show();
+		$('#memoriam').hide();
 		$('canvas').addClass('hidden');
 		this.sounds.menu.play();
 
@@ -172,7 +175,7 @@ var Game = {
 	},
 
 	_mapName: function () {
-		if (this.levelNum <= 6) {
+		if (this.levelNum <= 6 || this.mode == 'infinite') {
 			return 'Dungeon Floor ' + Game.levelNum;
 		} else {
 			return 'Dragon\'s Lair';
@@ -180,7 +183,7 @@ var Game = {
 	},
 
 	_mapType: function () {
-		if (this.levelNum <= 6) {
+		if (this.levelNum <= 6 || this.mode == 'infinite') {
 			return 'dungeon';
 		} else {
 			return 'cellular';
@@ -404,7 +407,25 @@ var Game = {
 };
 
 $(document).ready(function () {
-	Game.init();
+	$('#startStoryButton').click(function () {
+		Game.init('story');
+	});
+
+	$('#startInfiniteButton').click(function () {
+		Game.init('infinite');
+	});
+
+	$('#continueButton').click(function () {
+		$('#memoriam').hide();
+		$('canvas').removeClass('hidden');
+		Game.sounds.menu.pause();
+		Game.sounds.menu.load();
+
+		Game.mode = 'infinite';
+		Game.ended = false;
+		Game.nextLevel();
+		Game._startCountdown();
+	});
 
 	$('#muteButton').click(function () {
 		Game.mute();
@@ -419,4 +440,7 @@ $(document).ready(function () {
 			Game.help();
 		}
 	});
+
+	Game.display = new ROT.Display({spacing:1.1});
+	$('#canvasContainer').append(Game.display.getContainer());
 })

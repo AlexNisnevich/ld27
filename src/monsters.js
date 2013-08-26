@@ -94,6 +94,7 @@ var Aardvark = Monster.ext({
 		this._cr = 7;
 	}
 });
+Aardvark._cr = 7;
 
 var Bunny = Monster.ext({
 	init: function(x, y){
@@ -108,6 +109,7 @@ var Bunny = Monster.ext({
 		this._cr = 5;
 	}
 });
+Bunny._cr = 5;
 
 var Chicken = Monster.ext({
 	init: function(x, y){
@@ -122,6 +124,7 @@ var Chicken = Monster.ext({
 		this._cr = 3;
 	}
 });
+Chicken._cr = 3;
 
 var Goblin = Monster.ext({
 	init: function(x, y){
@@ -136,6 +139,7 @@ var Goblin = Monster.ext({
 		this._cr = 15;
 	}
 });
+Goblin._cr = 15;
 
 var Grue = Monster.ext({
 	init: function(x, y){
@@ -162,6 +166,7 @@ var Grue = Monster.ext({
 		Game.player._blinded = false;
 	}
 });
+Grue._cr = 20;
 
 var Hobgoblin = Monster.ext({
 	init: function(x, y){
@@ -176,6 +181,7 @@ var Hobgoblin = Monster.ext({
 		this._cr = 20;
 	}
 });
+Hobgoblin._cr = 20;
 
 var Tree = Monster.ext({
 	init: function(x, y){
@@ -191,6 +197,7 @@ var Tree = Monster.ext({
 	},
 	getSpeed: function() { return 1/3; }
 });
+Tree._cr = 40;
 
 var Dragon = Monster.ext({
 	init: function(x, y){
@@ -252,9 +259,13 @@ var Dragon = Monster.ext({
 		Game._drawVisibleArea();
 
 		Game.sounds.explosion.play();
-		Game.end();
+
+		if (Game.mode == 'story') {
+			Game.end();
+		}
 	}
 });
+Dragon._cr = 200;
 
 var DragonHatchling = Monster.ext({
 	init: function(x, y){
@@ -270,3 +281,4 @@ var DragonHatchling = Monster.ext({
 	},
 	getSpeed: function() { return 1.5; }
 });
+DragonHatchling._cr = 20;

@@ -49,7 +49,9 @@ Game.generateCharacter = function (lvl) {
 		wisdom: 2
 	}
 
-	_(lvl * 3).times(function () {
+	var extraPoints = (Game.mode == 'story') ? (lvl * 3) : Math.floor(lvl * 3.5);
+
+	_(extraPoints).times(function () {
 		var attribute = _(attributes).keys()[_.random(0, _(attributes).keys().length - 1)];
 		attributes[attribute]++;
 	});
