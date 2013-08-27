@@ -251,16 +251,16 @@ canvas.hidden {
 }
 
 .sprite {
-	width: 100px;
+	width: 125px;
 	height: 125px;
 	margin: 0 auto;
 }
 
 .sprite div {
-	width: 100px;
+	width: 125px;
 	height: 125px;
 	position: absolute;
-	background-image: url('images/sprites_big_trans.png');
+	background-image: url('images/sprites_big_trans_x.png');
 }
 
 .sprite .body.front {
@@ -284,15 +284,15 @@ canvas.hidden {
 }
 
 #heroes .sprite {
-	width: 20px;
+	width: 25px;
 	height: 25px;
 	margin: -5px 5px 0 10px;
 }
 
 #heroes .sprite div {
-	width: 20px;
+	width: 25px;
 	height: 25px;
-	background-image: url('images/sprites_small_trans.png');
+	background-image: url('images/sprites_small_trans_x.png');
 }
 
 #heroes .sprite .body.front {

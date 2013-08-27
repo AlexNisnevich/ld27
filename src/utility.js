@@ -64,7 +64,7 @@ Game.generateCharacter = function (lvl) {
 
 	var char = {
 		name: this.generateName(),
-		sprite: this.generateSprite(18, 100, 20),
+		sprite: this.generateSprite(25, 125, 25),
 		level: lvl,
 		attributes: attributes,
 		hp: hp,
