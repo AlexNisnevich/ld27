@@ -264,22 +264,18 @@ canvas.hidden {
 }
 
 .sprite .body.front {
-	background-position-y: 0px;
 	z-index: 4;
 }
 
 .sprite .head.front {
-	background-position-y: -125px;
 	z-index: 3;
 }
 
 .sprite .body.back {
-	background-position-y: -250px;
 	z-index: 2;
 }
 
 .sprite .head.back {
-	background-position-y: 125px;
 	z-index: 1;
 }
 

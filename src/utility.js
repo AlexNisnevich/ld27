@@ -82,13 +82,22 @@ Game.generateSprite = function (variants, widthBig, widthSmall) {
 
 	var spriteBig = $('<div>').addClass('sprite');
 	spriteBig.html('<div class="body front"></div><div class="head front"></div><div class="body back"></div><div class="head back"></div>');
-	spriteBig.find('.head').css({'background-position-x': headNum * widthBig});
-	spriteBig.find('.body').css({'background-position-x': bodyNum * widthBig});
-
+	var bodyOffset = bodyNum * widthBig;
+	var headOffset = headNum * widthBig;
+	spriteBig.find('.body.front').css({'background-position':  bodyOffset + "px 0px"});
+	spriteBig.find('.head.front').css({'background-position':  headOffset + "px -125px"});
+	spriteBig.find('.body.back').css({'background-position': bodyOffset + "px -250px" });
+	spriteBig.find('.head.back').css({'background-position':  headOffset + "px -375px"});
+	
+	bodyOffset = bodyNum * widthSmall;
+	headOffset = headNum * widthSmall;
 	var spriteSmall = $('<div>').addClass('sprite');
 	spriteSmall.html('<div class="body front"></div><div class="head front"></div><div class="body back"></div><div class="head back"></div>');
-	spriteSmall.find('.head').css({'background-position-x': headNum * widthSmall});
-	spriteSmall.find('.body').css({'background-position-x': bodyNum * widthSmall});
+
+	spriteSmall.find('.body.front').css({'background-position':  bodyOffset + "px 0px"});
+	spriteSmall.find('.head.front').css({'background-position':  headOffset + "px -25px"});
+	spriteSmall.find('.body.back').css({'background-position': bodyOffset + "px -50px" });
+	spriteSmall.find('.head.back').css({'background-position':  headOffset + "px -75px"});
 
 	return {
 		big: spriteBig,
